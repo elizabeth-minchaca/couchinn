@@ -1,0 +1,210 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}calificaciones.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/button.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.min.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/modal.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/tooltip.js"></script>
+    <script type="text/javascript">
+        function calificar(idReserva) {
+            $("#idReservaForm").attr("value", idReserva);
+            $("#CalificarModal").modal({
+                "show": true,
+                "keyboard": false,
+                "backdrop": "static",
+            });
+        }
+        $(document).ready(function () {
+            $('#calificarForm').submit(function (event) {
+                //cambiar estado del boton submit
+                $("#calificarSubmit").button('loading');
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ constant('ROOT_URL') }}calificacion.php?action=sent_calificacion",
+                    data: new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    dataType: 'json',
+                    processData: false
+                }).done(function (data) {
+                    //Se verifica si hubo error del lado del servidor
+                    if (data.error) {
+                        // swal("Error!", "Tu Couch NO fue registrado en el sistema." + data.msj, "error");
+                    } else {
+                        $("#CalificarModal").modal("hide");
+                        //Cambiar botton
+                        $("#calificarSubmit").button('reset');
+                        //Reset form
+                        $('#calificarForm').trigger("reset");
+                        swal({
+                            title: "Felicitaciones!",
+                            text: "Tu calificación fue registrada exitosamente!",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonText: "Cerrar",
+                            closeOnConfirm: false
+                        }, function (isConfirm) {
+                            if (isConfirm)
+                                $(location).attr('href', "{{ constant('ROOT_URL') }}calificacion.php?action=list_calificar");
+                        });
+                    }
+                });
+                event.preventDefault();
+            });
+        });
+
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+            <div id="calificacionContainer" class="col-md-9">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1><span class="glyphicon glyphicon-star-empty"></span>  Calificar Huésped<small>- pendientes</small></h1>
+                        </div>
+                        <table class="table table-condensed table-striped table-bordered">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Huésped</th>
+                                <th class="text-center">Couch visitado</th>
+                                <th class="text-center">Perdiodo visitado</th>                                
+                                <th class="text-center">Acción</th>
+                            </tr>
+                            {% for pendiente in pendientes %}
+                                <tr>
+                                    <td class="text-center">{{loop.index}}</td>
+                                    <td>
+                                        <a href="{{ constant('ROOT_URL') }}usuario.php?action=show&id={{pendiente.idUsuarioHospedado}}">
+                                            <strong>{{pendiente.apellido |upper}}</strong> {{pendiente.nombre |capitalize}} 
+                                        </a>
+                                        <a href="#">(<span class="glyphicon glyphicon-star"></span> Ver calificación)</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ constant('ROOT_URL') }}couch.php?action=show&id={{pendiente.idCouch}}">{{pendiente.titulo |capitalize}}</a>
+                                    </td>
+                                    <td class="text-center">
+                                        Del <strong>{{pendiente.fechaInicio | date("d/m/Y")}}</strong> al <strong>{{pendiente.fechaFin | date("d/m/Y")}}</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <a title="CALIFICAR" href="#" class="reservaRechazarButton" onclick="calificar({{pendiente.idReserva}});">
+                                            <span class="glyphicon glyphicon-star-empty"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1><span class="glyphicon glyphicon-star"></span>  Calificaciones<small>- realizadas</small></h1>
+                        </div>
+                        <table class="table table-condensed table-striped table-bordered">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Huésped</th>
+                                <th class="text-center">Couch visitado</th>
+                                <th class="text-center">Perdiodo visitado</th>                                
+                                <th class="text-center">Calificación</th>
+                                <th class="text-center">Comentario</th>
+                            </tr>
+                            {% for calificada in calificadas %}
+                                <tr>
+                                    <td class="text-center">{{loop.index}}</td>
+                                    <td>
+                                        <a href="{{ constant('ROOT_URL') }}usuario.php?action=show&id={{calificada.idUsuarioHospedado}}">
+                                            <strong>{{calificada.apellido |upper}}</strong> {{calificada.nombre |capitalize}} 
+                                        </a>
+                                        <a href="#">(<span class="glyphicon glyphicon-star"></span> Ver calificación)</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ constant('ROOT_URL') }}couch.php?action=show&id={{calificada.idCouch}}">{{calificada.titulo |capitalize}}</a>
+                                    </td>
+                                    <td class="text-center">
+                                        Del <strong>{{calificada.fechaInicio | date("d/m/Y")}}</strong> al <strong>{{calificada.fechaFin | date("d/m/Y")}}</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        {{calificada.puntajeUsuario}} <span class="glyphicon glyphicon-star"></span>
+                                    </td>
+                                    <td>
+                                        {{calificada.comentarioUsuario | capitalize}}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <div id="CalificarModal" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="calificarForm" class="form-horizontal">
+                            <input id="idReservaForm" type="hidden" value="" name="idReserva">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h3 class="modal-title"><span class="glyphicon glyphicon-star-empty"></span> <strong>Calificar</strong></h3>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group form-group-lg">
+                                    <label for="huespedes" class="col-sm-3 control-label">Valoración</label>
+                                    <div class="col-sm-3">
+                                        <select id="calificaionModal" class="form-control" name="calificacion" required="required">
+                                            <option class="text-center" value="">----</option>
+                                            <option class="text-center" value="1">1</option>
+                                            <option class="text-center" value="2">2</otion>
+                                            <option class="text-center" value="3">3</option>
+                                            <option class="text-center" value="4">4</option>
+                                            <option class="text-center" value="5">5</option>
+                                            <option class="text-center" value="6">6</option>
+                                            <option class="text-center" value="7">7</option>
+                                            <option class="text-center" value="8">8</option>
+                                            <option class="text-center" value="9">9</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-lg">
+                                    <label for="passActual" class="col-sm-3 control-label">Comentario</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="comentarioModal" name="comentario" class="form-control" rows="7" required="required" placeholder="Ingresar el comentario..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button id="calificarSubmit" type="submit"  data-loading-text="Calificando..." class="btn btn-primary">Calificar</button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <div class="col-md-12  containerPublicidad">
+                {% include  "publicidad_3.html.twig" %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

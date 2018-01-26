@@ -1,0 +1,221 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}registerLogin.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#registerForm').submit(function (event) {
+                // Registro
+                $.ajax({
+                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url: "{{ constant('ROOT_URL') }}register_login.php?action=register", // the url where we want to POST
+                    data: new FormData(this), // our data object
+                    contentType: false,
+                    cache: false,
+                    dataType: 'json',
+                    processData: false
+                }).done(function (data) {
+                    //Se verifica si hubo error del lado del servidor
+                    if (data.error) {
+                        swal("Error!", "No se pudo registrar en el Sistema." + data.msj, "error");
+                    } else {
+                        //confirmacion de exito
+                        swal({
+                            title: "Felicitaciones!",
+                            text: "Ya estas registrado en Couchinn!",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonText: "cerrar",
+                            closeOnConfirm: false
+                        }, function (isConfirm) {
+                            if (isConfirm)
+                                $(location).attr('href', "{{ constant('ROOT_URL') }}index.php");
+                        });
+                    }
+                });
+                event.preventDefault();
+            });
+
+            //Login Form
+            $('#loginForm').submit(function (event) {
+                // Registro
+                $.ajax({
+                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url: "{{ constant('ROOT_URL') }}register_login.php?action=login", // the url where we want to POST
+                    data: new FormData(this), // our data object
+                    contentType: false,
+                    dataType: 'json',
+                    processData: false
+                }).done(function (data) {
+                    //Se verifica si hubo error del lado del servidor
+                    if (data.error) {
+                        swal("Error!", data.msj, "error");
+                    } else {
+                        $(location).attr('href', "{{ constant('ROOT_URL') }}index.php");
+                    }
+                });
+                event.preventDefault();
+            });
+            //Recuperar Contraseña
+            $("#loginRecuperarPass").on("click", function () {
+                swal({
+                    title: "¿Te olvidaste la contraseña?",
+                    text: "Ingresa tu email registrado:",
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "Ingresa tu correo electrónico..."
+                }, function (inputValue) {
+                    if (inputValue === false)
+                        return false;
+                    if (inputValue === "") {
+                        swal.showInputError("Necesitas ingresar tu email!");
+                        return false;
+                    }
+                    $.ajax({
+                        type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                        url: "{{ constant('ROOT_URL') }}register_login.php?action=recovery", // the url where we want to POST
+                        data: {'email': inputValue}, // our data object
+                        dataType: 'json'
+                    }).done(function (data) {
+                        //Se verifica si hubo error del lado del servidor
+                        if (data.error) {
+                            swal.showInputError("ERROR: " + data.msj);
+                        } else {
+                            swal("Terminado!", "Te hemos enviado tus datos de acceso al correo: " + inputValue, "success");
+                        }
+                    });
+
+                });
+            });
+        });
+
+    </script>
+{% endblock %}
+{% block  header %}
+    <div id="header" class="row">
+        <div class="col-md-4 col-md-offset-2 contenedorLogo">
+            <h2><strong>COUCHINN</strong></h2>
+        </div>
+        <div class="col-md-4">
+            <form id="loginForm">
+                <div class="form-group form-group-sm col-md-4">
+                    <label for="exampleInputEmail1"><small>EMAIL</small></label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" name="email" placeholder="Correo electrónico">
+                    <div class="checkbox registerSmall">
+                        <label>
+                            <input type="checkbox" name="recordarme" value="si"> <span class="registerSmall">Recordarme</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm col-md-4">
+                    <label for="exampleInputPassword1"><small>CONTRASE&Ncaron;A</small></label>
+                    <input type="password" class="form-control" name="password" placeholder="Contraseña">
+                    <div class="col-md-12 registerSmall">
+                        <a id="loginRecuperarPass" href="#" class="registerSmall">Olvidaste tu contraseña?</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-xs btn-primary"><strong>Iniciar Sesi&oacute;n</strong></button>
+                </div>
+            </form> 
+        </div>
+    </div>
+{% endblock %}
+
+{% block container %}
+    <div id="registerContainer" class="row">
+        <div class="col-md-4 col-md-offset-2">
+            <img class="img-thumbnail img-rounded" src="{{ constant('PATH_URL_IMG') }}register.jpg"  alt="Logo de Couchinn">
+        </div>
+        <div class="col-md-3">
+            <div class="col-md-11 col-md-offset-1">
+                <h1><strong>Reg&iacute;strate</strong></h1>
+                <form id="registerForm">
+                    <div class="form-group form-group-lg row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="registerNombre" placeholder="Nombre" name="nombre" required="required">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="registerApellido" placeholder="Apellido" name="apellido" required="required">
+                        </div>
+                    </div>
+                    <div class="form-group form-group-lg">
+                        <input type="email" class="form-control" id="registerEmail" name="email" placeholder="Correo electr&oacute;nico">
+                    </div>
+                    <div class="form-group form-group-lg">
+                        <input type="password" class="form-control" required="required" id="registerPassword" name="password" placeholder="Contraseña">
+                    </div>
+                    <div class="form-group form-group-lg">
+                        <input type="password" class="form-control" required="required" placeholder="Repetir contraseña" name="confirm">
+                    </div>
+                    <h4>Fecha de nacimiento</h4>
+                    <div class="form-group form-group-lg row">
+                        <div class="col-md-3">
+                            <select class="form-control" name="nacimiento_dia" required="required">
+                                <option selected="" value="">Día</option>
+                                {% for dia in 1..31 %}
+                                    <option value="{{dia}}">{{dia}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control" name="nacimiento_mes" required="required">
+                                <option selected="" value="">Mes</option>
+                                {% set meses = {1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril', 5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto', 9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'} %}
+                                {% for mes in meses %}
+                                    <option value="{{loop.index}}">{{mes}}</option>
+                                {% endfor%}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" name="nacimiento_anio" required="required">
+                                <option selected="" value="">Año</option>
+                                {% set anios = 2016 %}
+                                {% for i in 1..111 %}
+                                    <option value="{{anios}}">{{anios}}</option>
+                                    {% set anios = anios - 1 %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-lg">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="genero" id="optionsRadios1" value="MASCULINO" required="required">
+                                Hombre
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="genero" id="optionsRadios2" value="FEMENINO" required="required">
+                                Mujer
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-lg">
+                        <p class="small">
+                            Al hacer clic en "Registrarte", aceptas las <a rel="nofollow" target="_blank" href="/legal/terms">Condiciones</a> y confirmas que leíste nuestra <a rel="nofollow" target="_blank" href="/about/privacy">Política de datos</a>, incluido el <a rel="nofollow" target="_blank" href="/help/cookies">uso de cookies</a>.
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-lg btn-primary">Registrarte</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <div id="registerFooter" class="row text-center" >
+        <img src="{{ constant('PATH_URL_IMG') }}couchinnLogo.png" style="height: 130px;" alt="Logo de Couchinn">
+    </div>
+{% endblock %}

@@ -1,0 +1,86 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23/05/2016, 15:50:57
+    Author     : kibunke
+*/
+:required:focus {
+    box-shadow: 0  0 3px rgba(255,0,0,0.5); 
+}
+
+#imagePreview:hover, #imageEditPreview:hover{
+    cursor: pointer;
+}
+#imagePreview{
+    width: 300px;
+    height: 300px;
+    border-radius: 45px;
+    margin-left: 25px;
+    border: 8px dashed rgb(150,172,60);
+    background-position: center center;
+    background-size: cover;
+    -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
+    display: inline-block;
+}
+
+form > div.row{
+    margin: 0px;
+}
+
+#couchNewForm > div.row:first-child > div > div.form-group{
+    margin-right: 0px;
+    margin-left: 0px;
+    margin-bottom: 35px;
+}
+#newCouchContainer{
+    background-color: white;
+    border-radius: 20px;
+    margin-bottom: 50px;
+    padding: 0px;
+}
+#newCouchContainer div.panel{
+    padding: 0px;
+    margin: 0px;
+}
+
+#newCouchContainer div.panel{
+    border-radius: 20px;
+    border: 0px;
+}
+#ciudadLoading{
+    display: none;
+}
+table a.despublicarButton{
+    background-color: #fe99a6;
+    color: black;
+}
+table td.online{
+    background-color: rgb(150,172,60);
+    color: whitesmoke;
+}
+
+table td.offline{
+    background-color: #fe99a6;
+}
+
+
+#imageEditPreview img{
+    height: 286px;
+    width: 286px;
+    border-radius: 30px;
+}
+#imageEditPreview{
+    width: 300px;
+    height: 300px;
+    border-radius: 45px;
+    margin-left: 25px;
+    border: 8px dashed rgb(150,172,60);
+    background-position: center center;
+    background-size: cover;
+    -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
+    display: inline-block;
+    padding: 0px;
+}

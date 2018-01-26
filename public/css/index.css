@@ -1,0 +1,122 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 14/05/2016, 14:41:22
+    Author     : kibunke
+*/
+#couchinnsContainer > div:first-child{
+    padding: 0px;
+    padding-top: 1%;
+}
+
+div.panel.couchTipo div.panel-footer{
+    color: white; 
+    height: 45px;
+}
+div.panel.couchTipo div.panel-footer{
+    background-color: rgb(150,172,60);
+    font-family: "Lato",sans-serif;
+    font-size: 18px;
+}
+
+#couchinnsContainer div.thumbnail p {
+    color: #999;
+}
+#couchinnsContainer div.thumbnail div.couchTitulo{
+    min-height: 100px;
+    padding: 2px;
+}
+#couchinnsContainer div.thumbnail .couchTitulo h4 * {
+    color: #1C85C7;
+    margin-top: 0px;
+}
+#couchinnsContainer div.thumbnail .couchTitulo h4:first-child {
+    color: black;
+    margin-top: 0px;
+}
+#couchinnsContainer div.thumbnail .couchTitulo h4:last-child {
+    color: rgb(150,172,60);
+    margin-top: 0px;
+}
+#couchinnsContainer div.thumbnail img, #couchinnsContainer div.thumbnail, #couchinnsContainer div.panel{
+    border-top-left-radius:  14px;
+    border-top-right-radius:  14px;
+}
+#couchinnsContainer .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover{
+    border-color: yellowgreen;
+    background-color: yellowgreen;
+}
+#couchinnsContainer p.couchDescripcion{
+    padding: 5%;
+    display: inline-block;
+    height: 170px;
+}
+#couchinnsContainer div.thumbnail div.couchDetalle div.couchDetalleVer a{
+    margin: 5%;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-left: 5%;
+    padding-right: 5%;
+    background-color: rgb(150,172,60);
+    border-color: rgb(150,172,60);
+}
+#couchinnsContainer p.contenedorCalificaciones span, #couchinnsContainer p.contenedorCapacidad span{
+    color: #f17200;
+}
+
+#couchinnsContainer div.thumbnail h4{
+    margin-bottom: 2px;
+}
+#couchinnsContainer div.thumbnail div.couchDetalle > div{
+    padding: 0px;
+}
+#couchinnsContainer div.thumbnail div.couchDetalle > div:last-child{
+    border-bottom: 1px solid #ccc;
+}
+#couchinnsContainer .thumbnail, #couchinnsContainer .panel-default{
+    border: none;
+    background: none;
+    box-shadow: none;
+}
+
+#couchinnsContainer img.logoCouchinn{
+    margin-bottom: 60px; 
+    margin-top: 60px; 
+    background-color: rgba(2, 2, 2, 0.20); 
+    border-radius: 0px;
+}
+
+#couchinnsContainer .panel-body{
+    padding: 0px;
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+}
+#couchinnsContainer .thumbnail img{
+    background-color: rgb(240,251,253);
+}
+#couchinnsContainer .thumbnail{
+    padding: 0px;
+    margin: 0px;
+}
+#couchinnsContainer .thumbnail .caption{
+    background:  rgba(0, 0, 0, 0) linear-gradient(to top, rgb(255,255,255), #effbfd) repeat scroll 0 0;
+    border: none;
+}
+
+#indexCouchLoading{
+    margin-top: 50px;
+    display: none;    
+}
+#couchinnsNoImage{
+    height: 178px; 
+    width: 420px;
+    padding-bottom: 60px;
+    padding-top: 60px;
+}
+#paginadorLoading{
+    margin: 50px;
+    display: none;
+}

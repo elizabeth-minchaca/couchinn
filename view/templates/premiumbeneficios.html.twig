@@ -1,0 +1,40 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}searcher.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}premium.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/carousel.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/modal.js"></script>
+{% endblock %}
+
+{% block container %}
+    {% include 'searcher.html.twig' %}
+    <div id="premiumContainer" class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-9">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1>Membres&iacute;a Premium <small>- beneficios</small></h1>
+                        </div>
+                        <h2>Bienvenido {{session.nombre |capitalize}}!</h2>
+                        <p>Te recormamos que por ser miembro <strong>PREMIUM</strong> de CouchInn, dispones de una visualización del sistema más detallada y ajustada a tus necesidades.</p>
+                        <p>Esperamos que continues confiando en nosotros.</p>
+                        <h4 class="text-right"><strong>CouchInn</strong></h4>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

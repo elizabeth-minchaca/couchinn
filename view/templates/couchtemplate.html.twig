@@ -1,0 +1,43 @@
+<div class="panel col-md-4 panel-default couchTipo">
+    <div class="panel-body">
+        <div class="thumbnail">
+            {% if (session.logueado and (session.tipo == 'ADMINISTRADOR' or session.tipo == 'PREMIUM'))%}
+                <img  src="data:image/png;base64,{{couch.foto}}"style="height: 178px; width: 420px;" />
+            {% else %}
+                <img id="couchinnsNoImage" src="{{ constant('PATH_URL_IMG') }}couchinnLogo.png"/>
+            {% endif %}
+            <div class="caption">
+                <div class="col-md-12 couchTitulo">
+                    <h4 class="text-center">{{ couch.titulo | title }}</h4>
+                    <h4 class="text-center"><small><strong>{{ couch.provincia | upper}}</strong></small></h4>
+                    <h4 class="text-center">{{ couch.ciudad |title }}</h4>
+                </div>
+
+
+                <div class="col-md-12 couchDetalle">
+                    <div class="col-md-6">
+
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-center contenedorCapacidad">
+                            Capacidad<br> 
+                            <span><strong>{{ couch.capacidad }}</strong></span>
+                        </p>
+                    </div>
+                    {% if session.logueado %}
+                        <div class="col-md-12 text-center couchDetalleVer">
+                            <a type="button" href="{{ constant('ROOT_URL') }}couch.php?action=show&id={{ couch.idCouch }}" class="btn btn-primary btn-lg active">VISITAR  <span class="glyphicon glyphicon-hand-right"></span></a>
+                        </div>
+                    {% else %}
+                        <div class="col-md-12 text-center couchDetalleVer">
+                            <a type="button" href="{{ constant('ROOT_URL') }}register_login.php?action=show" class="btn btn-primary btn-lg active">INGRESAR</a>
+                        </div>
+                    {% endif %}
+                </div>
+                <p class="couchDescripcion">{{ couch.descripcion }}</p>
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer text-center">{{couch.tipo |upper}}</div>
+</div>                

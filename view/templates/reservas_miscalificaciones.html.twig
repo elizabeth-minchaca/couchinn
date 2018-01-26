@@ -1,0 +1,80 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}calificaciones.css" type="text/css" />
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+            <div id="calificacionContainer" class="col-md-9">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1><span class="glyphicon glyphicon-star"></span>  Mis calificaciones <small>- realizadas a ti</small></h1>
+                        </div>
+                        <table class="table table-condensed table-striped table-bordered">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Couch visitado</th>
+                                <th class="text-center">Periodo visitado</th>
+                                <th class="text-center">Calificación</th>
+                                <th class="text-center">Comentario recibido</th>
+                                <th class="text-center">Calificado por</th>
+                            </tr>
+                            {% set total = 0 %}
+                            {% for micalificacion in miscalificaciones %}
+                                <tr>
+                                    <td class="text-center">{{loop.index}}</td>
+                                    <td>
+                                        <a href="{{ constant('ROOT_URL') }}couch.php?action=show&id={{micalificacion.idCouch}}">{{micalificacion.titulo |capitalize}}</a>
+                                    </td>
+                                    <td class="text-center">
+                                        Del <strong>{{micalificacion.fechaInicio | date("d/m/Y")}}</strong> al <strong>{{micalificacion.fechaFin | date("d/m/Y")}}</strong>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <h3>{{micalificacion.puntajeUsuario}}</h3>  <span class="glyphicon glyphicon-star"></span>
+                                    </td>
+
+                                    <td>
+                                        {{micalificacion.comentarioUsuario | capitalize}}
+                                    </td>
+                                    <td>
+                                        <a href="{{ constant('ROOT_URL') }}usuario.php?action=show&id={{micalificacion.idPropietario}}">
+                                            <strong>{{micalificacion.apellido |upper}}</strong> {{micalificacion.nombre |capitalize}} 
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% set total = total + micalificacion.puntajeUsuario %}
+                            {% endfor %}
+                            {% if miscalificaciones | length > 0%}
+                                <tr>
+                                    <td colspan="3" class="text-center">
+                                        <h4><em><strong>PROMEDIO</strong></em></h4>
+                                    </td>        
+
+                                    <td class="text-center">
+                                        <strong><h2>{{(total /  miscalificaciones| length)}}  <small><span class="glyphicon glyphicon-star"></span></small></h2></strong>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12  containerPublicidad">
+                {% include  "publicidad_3.html.twig" %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

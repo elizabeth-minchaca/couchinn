@@ -1,0 +1,197 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}newCouch.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/button.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.min.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/modal.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/tooltip.js"></script>
+    <script type="text/javascript">
+
+        function despublicar(idCouch) {
+            swal({
+                title: "¿Despublicar un Couch?",
+                text: "Esta por despublicar un couch seleccionado!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Si, despublicar!",
+                cancelButtonText: "No, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                // la URL para la petición
+                                url: "{{ constant('ROOT_URL') }}couch.php?action=despublicar",
+                                // la información a enviar
+                                // (también es posible utilizar una cadena de datos)
+                                data: {"idCouch": idCouch},
+                                // especifica si será una petición POST o GET
+                                type: 'POST',
+                                // el tipo de información que se espera de respuesta
+                                dataType: 'json',
+                                // código a ejecutar si la petición es satisfactoria;
+                                // la respuesta es pasada como argumento a la función
+                                success: function (json) {
+                                    if (json.error) {
+                                        swal("Error!", json.msj, "error");
+                                    } else {
+                                        swal({
+                                            title: "Terminado!",
+                                            text: "El Couch fue despublicado correctamente!",
+                                            type: "success",
+                                            showCancelButton: false,
+                                            confirmButtonText: "Cerrar",
+                                            closeOnConfirm: false
+                                        }, function (isConfirm) {
+                                            if (isConfirm)
+                                                $(location).attr('href', "{{ constant('ROOT_URL') }}couch.php?action=listado_couchs");
+                                        });
+                                    }
+                                },
+                                // código a ejecutar si la petición falla;
+                                // son pasados como argumentos a la función
+                                // el objeto de la petición en crudo y código de estatus de la petición
+                                error: function (xhr, status) {
+                                    alert('Disculpe, existió un problema');
+                                },
+                                // código a ejecutar sin importar si la petición falló o no
+                                complete: function (xhr, status) {
+                                    //alert('Petición realizada');
+                                }
+                            });
+
+                        }
+                    });
+
+        }
+        function publicar(idCouch) {
+            swal({
+                title: "¿Volver a publicar un Couch?",
+                text: "Esta por habilitar un couch despublicado!",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Si, publicar!",
+                cancelButtonText: "No, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                // la URL para la petición
+                                url: "{{ constant('ROOT_URL') }}couch.php?action=publicar",
+                                // la información a enviar
+                                // (también es posible utilizar una cadena de datos)
+                                data: {"idCouch": idCouch},
+                                // especifica si será una petición POST o GET
+                                type: 'POST',
+                                // el tipo de información que se espera de respuesta
+                                dataType: 'json',
+                                // código a ejecutar si la petición es satisfactoria;
+                                // la respuesta es pasada como argumento a la función
+                                success: function (json) {
+                                    if (json.error) {
+                                        swal("Error!", json.msj, "error");
+                                    } else {
+                                        swal({
+                                            title: "Terminado!",
+                                            text: "El Couch fue habilitado correctamente!",
+                                            type: "success",
+                                            showCancelButton: false,
+                                            confirmButtonText: "Cerrar",
+                                            closeOnConfirm: false
+                                        }, function (isConfirm) {
+                                            if (isConfirm)
+                                                $(location).attr('href', "{{ constant('ROOT_URL') }}couch.php?action=listado_couchs");
+                                        });
+                                    }
+                                },
+                                // código a ejecutar si la petición falla;
+                                // son pasados como argumentos a la función
+                                // el objeto de la petición en crudo y código de estatus de la petición
+                                error: function (xhr, status) {
+                                    alert('Disculpe, existió un problema');
+                                },
+                                // código a ejecutar sin importar si la petición falló o no
+                                complete: function (xhr, status) {
+                                    //alert('Petición realizada');
+                                }
+                            });
+
+                        }
+                    });
+
+        }
+
+    </script>
+
+{% endblock %}    
+{% block container %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+            <div id="newCouchContainer" class="col-md-9">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1><span class="glyphicon glyphicon-th-list"></span>  Mis Couch's <small>- listado</small></h1>
+                        </div>
+                        <table class="table table-condensed table-striped table-bordered">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Titulo <small>(Tipo)</small> </th>
+                                <th class="text-center">Capacidad</th>
+                                <th class="text-center">Lugar</th>                                
+                                <th class="text-center">Estado</th>
+                                <th class="text-center">Acci&oacute;n</th>
+                            </tr>
+                            {% for couch in couchs %}
+                                <tr>
+                                    <td class="text-center">{{ loop.index }}</td>
+                                    <td class="">{{ couch.titulo | capitalize }} <strong><small>({{ couch.tipo | capitalize }})</small></strong></td>
+                                    <td class="text-center">{{ couch.capacidad }}</td>
+                                    <td class=""><strong>{{ couch.provincia | upper }}</strong> - <small>{{ couch.ciudad | title }}</small></td>   
+                                    <td class="text-center {% if couch.bajaLogica == 0 %}online{% else %}offline{% endif %}">
+                                        <strong>{% if couch.bajaLogica == 0 %}online{% else %}offline{% endif %}</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if couch.bajaLogica == 0 %}
+                                            <a title="VER" href="{{ constant('ROOT_URL') }}couch.php?action=show&id={{ couch.idCouch }}">
+                                                <span class="glyphicon glyphicon-eye-open"></span>
+                                            </a>
+                                            <a title="EDITAR" href="{{ constant('ROOT_URL') }}couch.php?action=edit_couch&id={{ couch.idCouch }}">
+                                                <span class="glyphicon glyphicon-edit"></span>
+                                            </a>
+                                            <a title="DESPUBLICAR" onclick="despublicar({{ couch.idCouch }});" href="#"><span class="glyphicon glyphicon-trash"></span></a>  
+                                            {% else %}
+                                            <a class="btn btn-primary btn-xs " onclick="publicar({{ couch.idCouch }});" href="#" role="button">PUBLICAR</a>                                   
+                                        {% endif %}	                                 
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12  containerPublicidad">
+                {% include  "publicidad_3.html.twig" %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

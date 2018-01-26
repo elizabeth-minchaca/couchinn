@@ -1,0 +1,264 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}usuario.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/button.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.min.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/modal.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/tooltip.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#passChange').click(function (event) {
+                $('#passChangeForm').trigger("reset");
+                $("#passChangeModal").modal({
+                    "show": true,
+                    "keyboard": false,
+                    "backdrop": "static"
+                });
+            });
+            //Submit change password
+            $('#passChangeForm').submit(function (event) {
+                //cambiar estado del boton submit
+                $("#passChangeSubmit").button('loading');
+                var postData = $(this).serializeArray();
+                $.ajax({
+                    url: "{{ constant('ROOT_URL') }}usuario.php?action=password",
+                    type: "POST",
+                    data: postData,
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {
+                        $("#passChangeSubmit").button('reset');
+                        $('#passChangeModal').modal('hide');
+                        if (data.error) {
+                            swal({
+                                title: "Error!",
+                                text: data.msj,
+                                type: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "Cerrar",
+                                closeOnConfirm: true
+                            }, function (isConfirm) {
+                                if (isConfirm) {
+                                    $("#passChangeModal").modal({
+                                        "show": true,
+                                        "keyboard": false,
+                                        "backdrop": "static"
+                                    });
+                                }
+                            });
+                        } else {
+                            $("#passChangeSubmit").button('reset');
+                            swal("Listo!", "El perfil fue actualizado correctamente.", "success");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        swal("Error!", "No se ha podido guardar los cambios en el sistema." + data.msj, "error");
+                    }
+                });
+                event.preventDefault();
+            });
+
+            //Submit
+            $('#usuarioEditForm').submit(function (event) {
+                //cambiar estado del boton submit
+                $("#usuarioSubmit").button('loading');
+                $("#modalLoading").modal({
+                    "show": true,
+                    "keyboard": false,
+                    "backdrop": "static"
+                });
+                var postData = $(this).serializeArray();
+                $.ajax({
+                    url: "{{ constant('ROOT_URL') }}usuario.php?action=submit",
+                    type: "POST",
+                    data: postData,
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {
+                        $("#modalLoading").modal("hide");
+                        $("#usuarioSubmit").button('reset');
+                        if (data.error) {
+                            swal("Error!", data.msj, "error");
+                        } else {
+                            swal("Listo!", "El perfil fue actualizado correctamente.", "success");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        swal("Error!", "No se ha podido guardar los cambios en el sistema." + data.msj, "error");
+                    }
+                });
+                event.preventDefault();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+            <div id="usuarioContainer" class="col-md-9">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1>
+                                <span class="glyphicon glyphicon-user"> </span>
+                                {% if usuario.idUsuario == session.id %}
+                                    Mi Perfil 
+                                {% else %}
+                                    Perfil 
+                                {% endif %}
+                                <small>- Editar</small>
+                            </h1>
+                        </div>
+                        <form id="usuarioEditForm" class="form-horizontal">
+                            <input type="hidden" name="usuarioFormId"  readonly value="{{usuario.idUsuario}}">
+                            <div class="form-group form-group-lg">
+                                <label class="col-md-3 control-label ">Email</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">{{ usuario.email | capitalize}}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-group-lg">
+                                <label class="col-md-3 control-label ">Contraseña</label>
+                                <div class="col-lg-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" readonly value="**********">
+                                        <span class="input-group-btn">
+                                            <button id="passChange" class="btn btn-primary btn-lg" type="button"><span class="glyphicon glyphicon-edit"></span>  Cambiar</button>
+                                        </span>
+                                    </div><!-- /input-group -->
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="usuarioFormApellido" class="col-sm-3 control-label">Apellido</label>
+                                <div class="col-sm-9">
+                                    <input id="usuarioFormApellido" value="{{ usuario.apellido | capitalize }}" required="required" type="text" class="form-control" name="usuarioFormApellido">
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="usuarioFormNombre" class="col-sm-3 control-label">Nombre</label>
+                                <div class="col-sm-9">
+                                    <input type="text" required="required" value="{{ usuario.nombre | capitalize }}" class="form-control" name="usuarioFormNombre">
+                                </div>
+                            </div>
+                            <div id="usuarioGeneroContainer" class="form-group form-group-lg">                                
+                                <label for="inputPassword3" class="col-sm-3 control-label">Género</label>
+                                <div class="col-sm-9">
+                                    <input id="usuarioGeneroM" {% if usuario.genero == 'MASCULINO' %}checked="checked"{% endif %} type="radio" name="usuarioFormgenero" value="MASCULINO" required="required">
+                                    <label class="control-label" for="usuarioGeneroM">Hombre</label>
+                                    <input id="usuarioGeneroF" {% if usuario.genero == 'FEMENINO' %}checked="checked"{% endif %} type="radio" name="usuarioFormgenero"  value="FEMENINO" required="required">
+                                    <label class="control-label" for="usuarioGeneroF">Mujer</label>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label class="col-md-3 control-label ">Nacimiento</label>
+                                <div id="usuarioNacimientoContainer" class="col-md-9">
+                                    <div class="col-md-3">
+                                        <select class="form-control" name="usuarioFormNacimiento_dia" required="required">
+                                            <option selected="" value="">Día</option>
+                                            {% for dia in 1..31 %}
+                                                <option {% if usuario.fechaNacimiento | date('d') == dia %}selected="selected"{% endif %} value="{{dia}}">{{dia}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="usuarioFormNacimiento_mes" required="required">
+                                            <option selected="" value="">Mes</option>
+                                            {% set meses = {1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril', 5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto', 9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'} %}
+                                            {% for mes in meses %}
+                                                <option {% if usuario.fechaNacimiento | date('m') == loop.index %}selected="selected"{% endif %} value="{{loop.index}}">{{mes}}</option>
+                                            {% endfor%}
+                                        </select>
+                                    </div>          
+                                    <div class="col-md-3">
+                                        <select class="form-control" name="usuarioFormNacimiento_anio" required="required">
+                                            <option selected="" value="">Año</option>
+                                            {% set anios = 2016 %}
+                                            {% for i in 1..111 %}
+                                                <option {% if usuario.fechaNacimiento | date('Y') == anios %}selected="selected"{% endif %} value="{{anios}}">{{anios}}</option>
+                                                {% set anios = anios - 1 %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>      
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="usuarioFormTelefono" class="col-sm-3 control-label">Teléfono</label>
+                                <div class="col-sm-9">
+                                    <input type="tel" name="usuarioFormTelefono" class="form-control" id="usuarioFormTelefono" {% if usuario.telefono != '' %}value="{{usuario.telefono}}"{% endif %} placeholder="Télefono">
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="usuarioFormDireccion" class="col-sm-3 control-label">Dirección</label>
+                                <div class="col-sm-9">
+                                    <textarea id="usuarioFormDireccion" name="usuarioFormDireccion" class="form-control" placeholder="Dirección">{% if usuario.direccion != '' %}{{usuario.direccion}}{% endif %}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-group-lg">
+                                <div class="col-md-3 col-md-offset-3">
+                                    <button id="usuarioSubmit" type="submit" data-loading-text="GUARDANDO..."  class="btn btn-primary btn-lg">
+                                        <span class="glyphicon glyphicon-floppy-disk"></span> GUARDAR</button>    
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12  containerPublicidad">
+                {% include  "publicidad_3.html.twig" %}
+            </div>
+        </div>
+        <div id="passChangeModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="passChangeForm" class="form-horizontal">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Cambiar Contraseña</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group form-group-lg">
+                                <label for="passActual" class="col-sm-3 control-label">Actual</label>
+                                <div class="col-sm-9">
+                                    <input id="passActual" required="required" type="password" class="form-control" name="passChangeActual">
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="passActual" class="col-sm-3 control-label">Nueva</label>
+                                <div class="col-sm-9">
+                                    <input id="passChangeNueva" required="required" type="password" class="form-control" name="passChangeNueva">
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="passActual" class="col-sm-3 control-label">Confirmar</label>
+                                <div class="col-sm-9">
+                                    <input id="passChangeNuevaConfirm" required="required" type="password" class="form-control" name="passChangeNuevaConfirm">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button id="passChangeSubmit" type="submit"  data-loading-text="Cambiando..." class="btn btn-primary">Cambiar</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+
+{% endblock %}

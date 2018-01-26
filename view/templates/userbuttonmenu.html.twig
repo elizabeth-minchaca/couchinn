@@ -1,0 +1,42 @@
+<div class="col-md-3 botones">
+    <div id="userbuttonmenu" class="dropdown">
+        <button class="btn btn-default dropdown-toggle {% if session.tipo == 'PREMIUM' %}menuButtonPremium{% endif %}" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <strong>MENU</strong>
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li class="dropdown-header text-center"><strong>Bienvenido</strong></li>
+            <li class="dropdown-header text-center">{{session.apellido}} {{session.nombre}} </li>
+            <li class="dropdown-header text-center"><strong><em><small>{{session.email}}</small></em></strong></li>
+            <li role="separator" class="divider"></li>
+                {% if session.tipo == 'ADMINISTRADOR' %}
+                <li><a href="{{ constant('ROOT_URL') }}tipocouch.php"><span class="glyphicon glyphicon-tags"></span> TIPO COUCH</a></li>
+                <!--<li class="dropdown-header">USUARIOS</li>
+                <li><a href="#"><span class="glyphicon glyphicon-plus"></span> NUEVO</a></li>
+                <!--<li><a href="#"><span class="glyphicon glyphicon-th-list"></span> LISTADO</a></li> -->
+                <li role="separator" class="divider"></li>
+                {% endif %}
+            <li class="dropdown-header">COUCH'S</li>
+            <li><a href="{{ constant('ROOT_URL') }}index.php"><span class="glyphicon glyphicon-th-list"></span> COUCH'S</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header">MI COUCH</li>
+            <li><a href="{{ constant('ROOT_URL') }}couch.php?action=new"><span class="glyphicon glyphicon-plus"></span> NUEVO COUCH</a></li>
+            <li><a href="{{ constant('ROOT_URL') }}couch.php?action=listado_couchs"><span class="glyphicon glyphicon-th-list"></span> MIS COUCH'S</a></li> 
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header">CONSULTAS</li>
+            <li><a href="{{ constant('ROOT_URL') }}comentario.php?action=list_answers"><span class="glyphicon glyphicon-envelope"></span> POR RESPONDER</a></li>
+            <li><a href="{{ constant('ROOT_URL') }}comentario.php?action=list_questions"><span class="glyphicon glyphicon-envelope"></span> REALIZADAS</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header">RESERVAS</li>
+            <li><a href="{{ constant('ROOT_URL') }}reserva.php?action=list_realizadas"><span class="glyphicon glyphicon-paste"></span> REALIZADAS</a></li>
+            <li><a href="{{ constant('ROOT_URL') }}reserva.php?action=list_recibidas"><span class="glyphicon glyphicon-copy"></span> RECIBIDAS</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header">CALIFICACIONES</li>
+            <li><a href="{{ constant('ROOT_URL') }}calificacion.php?action=list_calificaciones"><span class="glyphicon glyphicon-star"></span> MIS CALIFICACIONES</a></li>
+            <li><a href="{{ constant('ROOT_URL') }}calificacion.php?action=list_calificar"><span class="glyphicon glyphicon-star-empty"></span> CALIFICAR HUÉSPED</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="{{ constant('ROOT_URL') }}usuario.php?action=show&id={{session.id}}"><span class="glyphicon glyphicon-cog"></span> MI PERFIL</a></li>
+            <li><a href="{{ constant('ROOT_URL') }}register_login.php?action=logout"><span class="glyphicon glyphicon-log-out"></span> SALIR</a></li>
+        </ul>
+    </div>
+</div>

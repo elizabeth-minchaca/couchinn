@@ -1,0 +1,197 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}searcher.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}premium.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/carousel.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/modal.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/button.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#premiumButton').on("click", function () {
+                $("#premiumModal").modal("show");
+            });
+            $('#premiumForm').submit(function (event) {
+                //cambiar estado del boton submit
+                var $btn = $('#premiumSubmit').button('loading');
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ constant('ROOT_URL') }}premium.php?action=join",
+                    dataType: 'json'
+                }).done(function (data) {
+                    $btn.button('reset');
+                    $("#premiumModal").modal("hide");
+                    swal({
+                        title: "Felicitaciones!",
+                        text: "Ya eres Miembro Premium! Te enviamos la factura a tu correo {{session.email}}",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonText: "cerrar",
+                        closeOnConfirm: false
+                    }, function (isConfirm) {
+                        if (isConfirm)
+                            $(location).attr('href', "{{ constant('ROOT_URL') }}index.php");
+                    });
+                });
+                event.preventDefault();
+            });
+            /*
+             $('#premiumSubmit').on('click', function () {
+             var $btn = $(this).button('loading');
+             // business logic...
+             //$btn.button('reset');
+             });*/
+        });
+    </script>
+{% endblock %}
+
+{% block container %}
+    {% include 'searcher.html.twig' %}
+    <div id="premiumContainer" class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-9">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1>Membres&iacute;a Premium<small>- únete</small></h1>
+                        </div>
+                        <h2>Hola {{session.nombre |capitalize}}!</h2>
+                        <p>Queremos ofrecerte un servicio <strong>PREMIUM</strong> de acceso a Couchinn. Conviértete en usuario premium y empieza a disfrutar de los beneficios.</p>
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img class="media-object" src="{{ constant('PATH_URL_IMG') }}foto1.png" style="height: 70px;" alt="Preview">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">Previsualización</h4>
+                                Previsualización de la imágen de cada Couch.
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="media-right pull-right">
+                                <a href="#">
+                                    <img class="media-object" src="{{ constant('PATH_URL_IMG') }}Premium.jpg" style="height: 70px;" alt="Preview">
+                                </a>
+                            </div>
+                            <div class="media-body text-right">
+                                <h4 class="media-heading">Interfaz mejorada</h4>
+                                Distruta de un diseño de menus premium.
+                            </div>
+                        </div>
+                        <h2 class="text-center">Sé Premium con solo un pago de <strong>{{membresia}} <small>$AR</small></strong> con tarjeta <img  src="{{ constant('PATH_URL_IMG') }}visa.png" style="height: 50px;" alt="Preview"></h2>
+                        <div class="col-md-12 text-center">
+                            <button id="premiumButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalPremium">
+                                ÚNETE
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block modalLoading %}
+    <!-- Modal -->
+    <div class="modal fade" id="premiumModal"  tabindex="-1" role="dialog" aria-labelledby="premiumModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Pago</h4>
+                </div>
+                <form id="premiumForm">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="nrotarjeta">Número de tarjeta</label>
+                                    <input type="number" required="required" class="form-control" id="nrotarjeta" placeholder="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="nrotarjeta">Fecha de expiración</label>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <select class="form-control" name="nacimiento_mes" required="required">
+                                                <option selected="" value="">Mes</option>
+                                                <option value="1">01</option>
+                                                <option value="2">02</option>
+                                                <option value="3">03</option>
+                                                <option value="4">04</option>
+                                                <option value="5">05</option>
+                                                <option value="6">06</option>
+                                                <option value="7">07</option>
+                                                <option value="8">08</option>
+                                                <option value="9">09</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select class="form-control" name="nacimiento_anio" required="required">
+                                                <option selected="" value="">Año</option>
+                                                <option value="2016">2020</option>
+                                                <option value="2015">2019</option>
+                                                <option value="2014">2018</option>
+                                                <option value="2013">2017</option>
+                                                <option value="2012">2016</option>
+                                                <option value="2011">2015</option>
+                                                <option value="2010">2014</option>
+                                                <option value="2009">2013</option>
+                                                <option value="2008">2012</option>
+                                                <option value="2007">2011</option>
+                                                <option value="2006">2010</option>
+                                                <option value="2005">2009</option>
+                                                <option value="2004">2008</option>
+                                                <option value="2003">2007</option>
+                                            </select>
+                                        </div>    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="titular">Nombre del titular</label>
+                                    <input type="text" class="form-control" required="required" id="titular" placeholder="Como aparece en la tarjeta">
+                                </div>
+                                <div class="form-group">
+                                    <label for="nrotarjeta">Código de seguridad</label>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="number" required="required" class="form-control"  placeholder="3 dígitos">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <img class="media-object" src="{{ constant('PATH_URL_IMG') }}visa2.png" style="height: 30px;" alt="Preview">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <img class="media-object" src="{{ constant('PATH_URL_IMG') }}visa3.png" style="height: 30px;" alt="Preview">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button id="premiumSubmit" type="submit" data-loading-text="Procesando..." class="btn btn-primary">Pagar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

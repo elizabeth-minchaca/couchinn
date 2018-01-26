@@ -1,0 +1,289 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}reserva.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/button.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.min.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/modal.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/tooltip.js"></script>
+    <script type="text/javascript">
+
+        function ver_calificacion(idUsuario) {
+            $.ajax({
+                method: "POST",
+                url: "{{ constant('ROOT_URL') }}reserva.php?action=get_calificacion",
+                dataType: "text", //Ojo con cambiar a json
+                data: {"idUsuario": idUsuario},
+                beforeSend: function () {
+
+                },
+                complete: function (data) {
+                    swal({
+                        title: "Calificación",
+                        text: data.msj,
+                        type: "info",
+                    }, function () {
+                       // swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                    });
+                }
+            });
+        }
+        function ajax_aceptar(idReserva) {
+            return ajax_reservas(idReserva, "aceptar_reserva");
+        }
+
+        function ajax_rechazar(idReserva) {
+            return ajax_reservas(idReserva, "rechazar_reserva");
+        }
+
+        function ajax_reservas(idReserva, action) {
+            $.ajax({
+                // la URL para la petición
+                url: "{{ constant('ROOT_URL') }}reserva.php?action=" + action,
+                // la información a enviar
+                // (también es posible utilizar una cadena de datos)
+                data: {"idReserva": idReserva},
+                // especifica si será una petición POST o GET
+                type: 'POST',
+                // el tipo de información que se espera de respuesta
+                dataType: 'json',
+                // código a ejecutar si la petición es satisfactoria;
+                // la respuesta es pasada como argumento a la función
+                success: function (json) {
+                    if (json.error) {
+                        swal("Error!", json.msj, "error");
+                    } else {
+                        swal({
+                            title: "Terminado!",
+                            text: "El Couch fue despublicado correctamente!",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonText: "Cerrar",
+                            closeOnConfirm: false
+                        }, function (isConfirm) {
+                            if (isConfirm)
+                                $(location).attr('href', "{{ constant('ROOT_URL') }}reserva.php?action=list_recibidas");
+                        });
+                    }
+                },
+                // código a ejecutar si la petición falla;
+                // son pasados como argumentos a la función
+                // el objeto de la petición en crudo y código de estatus de la petición
+                error: function (xhr, status) {
+                    alert('Disculpe, existió un problema');
+                },
+                // código a ejecutar sin importar si la petición falló o no
+                complete: function (xhr, status) {
+                    //alert('Petición realizada');
+                }
+            });
+        }
+
+        function aceptar(idReserva) {
+            swal({
+                title: "Aceptar reserva",
+                text: "Esta a punto de aceptar la reserva seleccionada!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Si, aceptar!",
+                cancelButtonText: "No, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        // la URL para la petición
+                        url: "{{ constant('ROOT_URL') }}reserva.php?action=verificar_conflicto",
+                        // la información a enviar
+                        // (también es posible utilizar una cadena de datos)
+                        data: {"idReserva": idReserva},
+                        // especifica si será una petición POST o GET
+                        type: 'POST',
+                        // el tipo de información que se espera de respuesta
+                        dataType: 'json',
+                        // código a ejecutar si la petición es satisfactoria;
+                        // la respuesta es pasada como argumento a la función
+                        success: function (json) {
+                            if (json.error) {
+                                swal({
+                                    title: "Estas seguro de continuar con la reserva?",
+                                    text: json.msj,
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Si, estoy seguro!",
+                                    cancelButtonText: "No, cancelar!",
+                                    closeOnConfirm: false
+                                }, function () {
+                                    ajax_aceptar(idReserva);
+                                });
+                            } else {
+                                ajax_aceptar(idReserva);
+                            }
+                        },
+                        // código a ejecutar si la petición falla;
+                        // son pasados como argumentos a la función
+                        // el objeto de la petición en crudo y código de estatus de la petición
+                        error: function (xhr, status) {
+                            alert('Disculpe, existió un problema');
+                        },
+                        // código a ejecutar sin importar si la petición falló o no
+                        complete: function (xhr, status) {
+                            //alert('Petición realizada');
+                        }
+                    });
+
+                }
+            });
+        }
+
+        function rechazar(idReserva) {
+            swal({
+                title: "Rechazar reserva",
+                text: "Esta a punto de rechazar la reserva seleccionada!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Si, rechazar!",
+                cancelButtonText: "No, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    ajax_rechazar(idReserva);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+        });
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+            <div id="reservaContainer" class="col-md-9">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1><span class="glyphicon glyphicon-copy"></span>  Reservas Recibidas<small>- pendientes</small></h1>
+                        </div>
+                        <table class="table table-condensed table-striped table-bordered">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Couch</th>
+                                <th class="text-center">Comentario</th>
+                                <th class="text-center">Fechas</th>
+                                <th class="text-center">Reservado</th>
+                                <th class="text-center">Reservado por</th>
+                                <th class="text-center">Acción</th>
+                            </tr>
+                            {% for recibida in recibidas %}
+                                <tr>
+                                    <td class="text-center">{{loop.index}}</td>
+                                    <td>
+                                        <a href="{{ constant('ROOT_URL') }}couch.php?action=show&id={{recibida.idCouch}}">{{recibida.titulo |capitalize}}</a>
+                                    </td>
+                                    <td>
+                                        {{recibida.comentarioReserva |capitalize}}
+                                    </td>
+                                    <td class="text-center">
+                                        Del <strong>{{recibida.fechaInicio | date("d/m/Y")}}</strong> al <strong>{{recibida.fechaFin | date("d/m/Y")}}</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        {{recibida.fechaAlta | date('d/m/Y H:i')}}
+                                    </td>
+                                    <td class="text-center">
+                                        <strong>{{recibida.apellido |upper}}</strong> {{recibida.nombre |capitalize}} <a href="#" onclick="ver_calificacion({{recibida.idUsuarioHospedado}})">(ver <span class="glyphicon glyphicon-star"></span>)</a>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <a title="RECHAZAR" href="#" class="reservaRechazarButton" onclick="rechazar({{recibida.idReserva}});">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
+                                        <a title="ACEPTAR" href="#" class="reservaAceptarButton" onclick="aceptar({{recibida.idReserva}});">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1><span class="glyphicon glyphicon-copy"></span>  Reservas Recibidas<small>- procesadas</small></h1>
+                        </div>
+                        <table class="table table-condensed table-striped table-bordered">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Couch</th>
+                                <th class="text-center">Comentario</th>
+                                <th class="text-center">Fechas</th>
+                                <th class="text-center">Reservado</th>
+                                <th class="text-center">Reservado por</th>
+                                <th class="text-center">Estado</th>
+                            </tr>
+                            {% for noPendiente in noPendientes %}
+                                <tr>
+                                    <td class="text-center">{{loop.index}}</td>
+                                    <td>
+                                        <a href="{{ constant('ROOT_URL') }}couch.php?action=show&id={{noPendiente.idCouch}}">{{noPendiente.titulo |capitalize}}</a>
+                                    </td>
+                                    <td>
+                                        {{noPendiente.comentarioReserva |capitalize}}
+                                    </td>
+                                    <td class="text-center">
+                                        Del <strong>{{noPendiente.fechaInicio | date("d/m/Y")}}</strong> al <strong>{{noPendiente.fechaFin | date("d/m/Y")}}</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        {{noPendiente.fechaAlta | date('d/m/Y H:i')}}
+                                    </td>
+                                    <td class="text-center">
+                                        <strong>{{noPendiente.apellido |upper}}</strong> {{noPendiente.nombre |capitalize}}
+                                    </td>
+
+                                    <td class="text-center estado{{noPendiente.estado|capitalize}}">
+                                        <strong>{{noPendiente.estado |upper}}</strong>
+                                        {% if noPendiente.estado == 'ACEPTADA' %}
+                                            <br>
+                                            <a href="{{ constant('ROOT_URL') }}usuario.php?action=show&id={{noPendiente.propietario}}">
+                                                <span class="glyphicon glyphicon-hand-right"></span><strong>CONTACTAR!</strong>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12  containerPublicidad">
+                {% include  "publicidad_3.html.twig" %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

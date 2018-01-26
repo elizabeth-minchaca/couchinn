@@ -1,0 +1,25 @@
+{% for comentario in comentarios %}
+    <div class="panel panel-primary panelComentario">
+        <div class="panel-body">
+            <div class="{% if comentario.respuesta == '' %}col-md-12{% else %}col-md-11{% endif %} alert alert-warning" role="alert">
+                <blockquote class="blockquote">
+                    <p><span class="glyphicon glyphicon-envelope"></span> {{comentario.pregunta | capitalize }}</p>
+                    <footer>
+                        <cite title="Usuario">
+                            <strong>{{ comentario.apellido | upper }}</strong> {{ comentario.nombre | capitalize }}
+                        </cite>
+                        -<em>{{comentario.fecha | date('d/m/Y  H:i')}}</em>
+                    </footer>
+                </blockquote>
+            </div>
+            {% if comentario.respuesta != '' %}
+                <div class="col-md-11 col-md-offset-1 alert alert-success" role="alert">
+                    <blockquote class="blockquote-reverse">
+                        <p><span class="glyphicon glyphicon-envelope"></span> {{ comentario.respuesta | capitalize }}</p>
+                        <footer> <cite title="Usuario"><strong>{{propietario.apellido |upper }} {{propietario.nombre |capitalize }}</strong> </cite></footer>
+                    </blockquote>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}

@@ -1,0 +1,155 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 09/12/2015, 20:59:23
+    Author     : kibunke
+*/
+body{
+    background-color: #EEEEEE !important;
+}
+body > div.row{
+    margin: 0px;
+}
+/**
+******  HEADER   *******
+*/
+#header a{
+    color: #6F6E6C;
+    text-decoration: none;
+}
+.headerPremium{ 
+    background:  rgba(0, 0, 0, 0) linear-gradient(to right, rgb(218,207,176), white) repeat scroll 0 0 !important;
+}
+#header.headerPremium a{
+    color: black;
+}
+.menuButtonPremium{
+    background-color: rgb(246,243,236) !important;
+}
+#textPremium, #textAdmin{
+    color: rgb(238,238,238);
+}
+
+#header a:hover{
+    color: #1C85C7;
+}
+#header .botones{
+    border-left: 1px ridge #6F6E6C;
+    height: 70px;
+    padding-top: 30px;
+}
+#header { 
+    font-family: "Lato",sans-serif;
+    background-color: white;
+    font-size: 0.9em;
+    border-color: #aaa;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 6px #aaa;
+}
+#header div.contenedorLogo{
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+/**
+******  FOOTER   *******
+*/
+
+#footer a {
+    color: white;
+}
+#footer{
+    background-color: #3F3F3F;
+    color: white;
+    font-size: 13px;
+}
+#footer strong{
+    color: #EA740A;
+}
+#footer div.contenedorAddres{
+    padding: 0px;
+    padding-top: 10px;
+}
+#footer div.logoFooter{
+    padding: 0px;
+    padding-top: 60px;
+}
+#footer .contenedorAddres address{
+    margin-bottom: 10px;
+}
+#mapa{
+    padding: 0px;
+    padding-top: 5px; 
+    padding-right: 5px;
+}
+div.containerPublicidad  div.panel div.panel-body, div.containerPublicidad  div.panel div.panel-body div.thumbnail{
+    margin: 0px;
+    padding: 0px;
+}
+/**
+  MENU DEL BOTON DE USUARIO REGISTRADO EN EL SISTEMA UBICADO EN EL HEADER 
+*/
+#userbuttonmenu{}
+
+#userbuttonmenu button{
+    border: none;
+    font-family: "Lato",sans-serif;
+    color: #1C85C7;
+    text-decoration: none;
+    font-size: 1em;
+    padding-top: 0px;
+}
+#userbuttonmenu button:hover{
+    color: #1C85C7;
+    background-color: rgb(255,255,255);
+}
+
+#userbuttonmenu .btn-default.active, .btn-default:active, .open > .dropdown-toggle.btn-default{
+    background-color: rgb(255,255,255);
+}
+#userbuttonmenu .btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default.focus:active, .btn-default:active:focus, .btn-default:active:hover, .open > .dropdown-toggle.btn-default.focus, .open > .dropdown-toggle.btn-default:focus, .open > .dropdown-toggle.btn-default:hover{
+    background-color: rgb(255,255,255);
+}
+#userbuttonmenu a:hover{
+    color: #1C85C7;
+}
+/*****************************************************************************/
+body .btn-primary:hover{
+    background-color: rgb(40,139,201);
+}
+body .btn-primary{
+    color: white;
+    background-color: rgb(150,172,60);
+    border-color: rgb(150,172,60);
+}
+
+/**
+Modal Loading....
+*/
+#modalLoading div.modal-content{
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+}
+#modalLoading img{
+    height: 180px;
+    margin-top: 50%;
+}
+
+/******************************************************************************/
+
+div.panel div.panel-heading{
+    border-top-right-radius: 20px !important;
+    border-top-left-radius: 20px !important;
+}
+
+div.panel div.panel-footer{
+    border-bottom-right-radius: 20px !important;
+    border-bottom-left-radius: 20px !important;
+}
+div.panel div.panel-footer,  div.panel div.panel-heading{ 
+    background-color: rgb(150,172,60) !important;
+    border-color: rgb(150,172,60) !important;
+}

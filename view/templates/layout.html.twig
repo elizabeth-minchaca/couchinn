@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Couchinn</title>
+        <meta name="description" content="Sistema de publicaci&oacute;n de hospedajes">
+        <meta name="author" content="Grupo 45 - Ingenieria de sotware 2 - 2016">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% block stylesheet %}
+            <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}layout.css" type="text/css" /> 
+            <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}jquery/jquery-ui-1.11.4/jquery-ui.css" type="text/css" />
+            <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
+        {% endblock %}
+        {% block otherStylesheet  %}
+        {% endblock %}
+    </head>
+    <body>
+        {% block javascripts %}
+            <script src="{{ constant('PATH_URL_VENDOR') }}jquery/jquery-2.2.3.min.js"></script>
+            <script src="{{ constant('PATH_URL_VENDOR') }}jquery/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+            <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/dropdown.js"></script>
+        {% endblock %}
+        {% block otherJavascripts %}
+        {% endblock %}
+        {% block  header %}
+            <div id="header" class="row {% if session.logueado and session.tipo == 'PREMIUM' %}headerPremium{% endif %}">
+                <div class="col-md-4 col-md-offset-2 contenedorLogo">
+                    <a href="{{ constant('ROOT_URL') }}index.php">
+                        <img src="{{ constant('PATH_URL_IMG') }}couchinnLogo.png" style="height: 60px;" alt="Logo de Couchinn">
+                    </a>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="col-md-3 botones">
+                        <a href="#"></a>
+                    </div>
+                    <div class="col-md-3 botones">
+                        {% if session.logueado and session.tipo == 'PREMIUM' %}
+                            <a href="{{ constant('ROOT_URL') }}premium.php?action=beneficios">BENEFICIOS</a>
+                        {% else %}
+                            <a href="{{ constant('ROOT_URL') }}premium.php?action=join">SE PREMIUM!</a>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-3 botones">
+                        <a href="{{ constant('ROOT_URL') }}index.php">COUCH'S</a>
+                    </div>
+                    {% block headerMenu %}
+                        {% if session.logueado  %}
+                            {% include 'userbuttonmenu.html.twig'%}
+                        {% else %}
+                            <div class="col-md-3 botones">
+                                <a href="{{ constant('ROOT_URL') }}register_login.php?action=show">INGRESAR  <span class="glyphicon glyphicon-log-in"></span></a>
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+                {% if session.logueado and session.tipo == 'PREMIUM' %}
+                    <div id="textPremium" class="col-md-2 text-center ">
+                        <h2><strong>PREMIUM</strong></h2>
+                    </div>
+                {% endif %}
+                {% if session.logueado and session.tipo == 'ADMINISTRADOR' %}
+                    <div id="textAdmin" class="col-md-2 text-center ">
+                        <h2><strong>ADMINISTRADOR</strong></h2>
+                    </div>
+                {% endif %}
+            </div>
+        {% endblock %}
+        {% if session.logueado  %}
+            {% include  "usermenu.html.twig" %}
+        {% endif %}
+        {% block container %}
+        {% endblock %}
+        {% block modalLoading %}
+            <!-- Modal -->
+            <div class="modal fade" id="modalLoading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body text-center">
+                            <img src="{{ constant('PATH_URL_IMG') }}loading4.gif" style="height: 180px;" alt="Logo de cargando">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+        {% block footer %}
+            <div id="footer" class="row" >
+                <div class="col-md-3">
+                    <div class="col-md-6 logoFooter text-center">
+                        <img src="{{ constant('PATH_URL_IMG') }}couchinnLogo.png" style="height: 45px;" alt="Logo de Couchinn">
+                    </div>
+                    <div class="col-md-6 text-center contenedorAddres">
+                        <address>
+                            <strong>Oficina Central</strong><br>
+                            Calle 12 nro 1250<br>
+                            Piso 16, Oficina 20<br>
+                            La Plata, Buenos Aires<br>
+                            <abbr title="Teléfono">Tel&eacute;fono:</abbr> (0221) 424-7890
+                        </address>
+                        <address>
+                            <strong>Contacto</strong><br>
+                            <a href="mailto:#">informacion@couchinn.com</a>
+                        </address>
+                    </div>    
+                </div>
+                <div id="mapa" class="col-md-9 text-right">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13085.02842011937!2d-57.95366665!3d-34.92508835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0000000000000000%3A0x9322890c84a35ff6!2sTorre+Gubernamental+I!5e0!3m2!1ses-419!2sar!4v1463171422349" width="100%" height="150px" frameborder="0" style="border:0" allowfullscreen></iframe>
+                </div>
+            </div>
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,124 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}usuario.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/button.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.min.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/modal.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/tooltip.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+            <div id="usuarioContainer" class="col-md-9">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h1>
+                                        <span class="glyphicon glyphicon-user"></span>
+                                        {% if usuario.idUsuario == session.id %}
+                                            Mi Perfil 
+                                        {% else %}
+                                            Perfil 
+                                        {% endif %}
+                                        <small>- Ver</small>
+                                    </h1>
+                                </div>
+                                {% if usuario.idUsuario == session.id %}
+                                    <div id="usuarioEditButton" class="col-md-6 text-right">   
+                                        <h1>
+                                            <small>
+                                                <a href="{{ constant('ROOT_URL') }}usuario.php?action=edit&id={{session.id}}">
+                                                    <span class="glyphicon glyphicon-edit"> </span> Editar
+                                                </a>
+                                            </small>
+                                        </h1>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <form class="form-horizontal">
+                            <div class="form-group form-group-lg">
+                                <label for="newCouchTipo" class="col-md-3 control-label ">Email</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">{{ usuario.email | capitalize}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="usuarioFormApellido" class="col-sm-3 control-label">Apellido</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">{{ usuario.apellido | capitalize}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="usuarioFormNombre" class="col-sm-3 control-label">Nombre</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">{{ usuario.nombre | capitalize}}</p>
+                                </div>
+                            </div>
+                            <div id="usuarioGeneroContainer" class="form-group form-group-lg">                                
+                                <label for="inputPassword3" class="col-sm-3 control-label">Género</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">{{ usuario.genero | capitalize }}</p>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label class="col-md-3 control-label ">Nacimiento</label>
+                                <div id="usuarioNacimientoContainer" class="col-md-9">
+                                    <p class="form-control-static">{{ usuario.fechaNacimiento | date('d/m/Y') }}</p>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="usuarioFormTelefono" class="col-sm-3 control-label">Teléfono</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">
+                                        {% if usuario.telefono == '' %}
+                                            -
+                                        {% else %}
+                                            {{ usuario.telefono | capitalize }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="usuarioFormDireccion" class="col-sm-3 control-label">Dirección</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">
+                                        {% if usuario.direccion == '' %}
+                                            -
+                                        {% else %}
+                                            {{ usuario.direccion | capitalize }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12  containerPublicidad">
+                {% include  "publicidad_3.html.twig" %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

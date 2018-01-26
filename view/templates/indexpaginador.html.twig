@@ -1,0 +1,15 @@
+<li {% if pagActiva == 1 %}class="disabled"{% endif %}>
+    <a href="#" aria-label="Anterior" {% if pagActiva > 1 %}onclick="goTo({{ pagActiva - 1}});"{% endif %}>
+        <span aria-hidden="true">&laquo;</span>
+    </a>
+</li>
+{% for index in 1..paginas %}
+    <li {% if index == pagActiva %}class="active"{% endif %}>
+        <a href="#" {% if index != pagActiva %}onclick="goTo({{ index }});"{% endif %}>{{ index }}</a>
+    </li>
+{% endfor %}
+<li {% if pagActiva == paginas %}class="disabled"{% endif %}>
+    <a href="#" aria-label="Siguiente" {% if pagActiva < paginas %}onclick="goTo({{ pagActiva + 1}});"{% endif %} >
+        <span aria-hidden="true">&raquo;</span>
+    </a>
+</li>

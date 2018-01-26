@@ -1,0 +1,51 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 15/05/2016, 17:22:42
+    Author     : kibunke
+*/
+
+#layoutContainer > div:nth-child(1) > div:nth-child(1){ 
+    border: 5px dashed #6F6E6C;
+    padding-top: 5px;
+    color: #6F6E6C !important;
+}
+#layoutContainer > div:nth-child(1) > div:nth-child(2){
+    border: 5px dashed #cf31fa;
+    color: #cf31fa;
+}
+#layoutContainer > div:nth-child(1) > div:nth-child(3){
+    height: 641px;
+    border: 5px dashed #377ae8;
+    color: #377ae8;
+    padding-top: 240px;
+}
+#layoutContainer > div:nth-child(2){
+    height: 746px;
+    border: 5px dashed #e83737;
+    color: #e83737;
+    padding-top: 320px;
+}
+#header{
+    height: 60px;
+    padding-top: 5px;
+    color: #ad8161;
+    background-color: rgb(238,238,238);
+    border: 5px dashed #ad8161;
+}
+#footer{
+    height: 80px;
+    color: #070a3e;
+    padding-top: 15px;
+    background-color: rgb(238,238,238);
+    border: 5px dashed #070a3e;
+}
+#footer strong{
+    color: #070a3e;
+}
+#layoutContainer > div {
+    padding: 0px;
+}

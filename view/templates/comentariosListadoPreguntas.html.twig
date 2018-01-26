@@ -1,0 +1,111 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}comentario.css" type="text/css" />
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+            <div id="comentarioContainer" class="col-md-9">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1><span class="glyphicon glyphicon-envelope"></span>  Consultas <small>- realizadas por ti</small></h1>
+                        </div>
+                        <table class="table table-condensed table-striped table-bordered">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Couch</th>
+                                <th class="text-center">Mi Pregunta</th>
+                                <th class="text-center">Realizado</th>
+                                <th class="text-center">Respuesta</th>
+                                <th class="text-center">Estado</th>
+                            </tr>
+                            {% for realizada in realizadas %}
+                                {% if realizada.respuesta is null %}
+                                    {% set claseTD = 'pendiente' %}
+                                {% else %}
+                                    {% set claseTD = 'respondida' %}
+                                {% endif %}
+
+                                <tr>
+                                    <td class="text-center">{{loop.index}}</td>
+                                    <td>
+                                        <a href="{{ constant('ROOT_URL') }}couch.php?action=show&id={{realizada.idCouch}}">{{realizada.titulo}}</a>
+                                    </td>
+                                    <td>
+                                        <em>{{realizada.pregunta |capitalize}}</em>
+                                    </td>
+                                    <td class="text-center">{{realizada.fecha | date('d/m/Y  H:i')}}</td>
+
+                                    {% if realizada.respuesta is null %}
+                                        <td class="text-center">---</td>
+                                    {% else %}
+                                        <td><strong>{{realizada.respuesta |capitalize}}</strong></td>
+                                    {% endif %}
+
+                                    <td class="text-center {{ claseTD }}">
+                                        <strong>
+                                            {% if realizada.respuesta is null %}PENDIENTE{% else %}RESPONDIDA{% endif %}
+                                        </strong>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12  containerPublicidad">
+                {% include  "publicidad_3.html.twig" %}
+            </div>
+        </div>
+        <div id="contestarModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="contestarForm" class="form-horizontal">
+                        <input id="idModal" type="hidden" name="id" value="">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Contestar</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group form-group-lg">
+                                <label for="passActual" class="col-sm-3 control-label">Destinatario</label>
+                                <div class="col-sm-9">
+                                    <p id="destinatarioModal" class="form-control-static"></p>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="passActual" class="col-sm-3 control-label">Comentario</label>
+                                <div class="col-sm-9">
+                                    <p id="comentarioModal" class="form-control-static"></p>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <label for="passActual" class="col-sm-3 control-label">Respuesta</label>
+                                <div class="col-sm-9">
+                                    <textarea id="respuestaModal" name="comentario" class="form-control" rows="7" required="required" placeholder="Ingresar la respuesta..."></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button id="contestarFormSubmit" type="submit"  data-loading-text="Enviando..." class="btn btn-primary">Contestar</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+
+{% endblock %}

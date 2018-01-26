@@ -1,0 +1,32 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 10/06/2016, 21:36:01
+    Author     : kibunke
+*/
+
+#usuarioNacimientoContainer > div{
+    padding: 0px;
+}
+#usuarioNacimientoContainer > div:first-child{
+    padding-right: 20px;   
+}
+#usuarioNacimientoContainer > div:last-child{
+    padding-left: 20px;
+}
+#usuarioGeneroContainer div label{
+    font-weight: normal;
+    padding-right: 10px;
+}
+#usuarioContainer .panel{
+    border: none;
+    border-radius: 20px;
+}
+
+#usuarioEditButton a{
+    text-decoration: none;   
+    color: rgb(150,172,60);
+}

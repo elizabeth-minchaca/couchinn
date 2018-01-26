@@ -1,0 +1,49 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}template.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/collapse.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/carousel.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/transition.js"></script>
+{% endblock %}
+
+{% block container %}
+    <div class="row" id="layoutContainer">
+        <div class="col-md-6 col-md-offset-2">
+            <div class="col-md-12">
+                <h4 class="text-center"><strong>MENU</strong></h4>
+            </div>
+            <div class="col-md-12">
+                <h4 class="text-center"><strong>BREADCRUMBS</strong></h4>
+            </div>
+            <div class="col-md-12">
+                <h4 class="text-center"><strong>CONTENIDO</strong></h4>
+
+                <form>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email *</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Ej: unemail@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Teléfono</label>
+                        <input type="number" class="form-control" id="exampleInputEmail1" placeholder="codArea + Número">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputFile">Avatar</label>
+                        <input type="file" id="exampleInputFile">
+                    </div>
+                    <button type="submit" class="btn btn-default">Registrar</button>
+                </form>
+                <span>(*) Campos obligatorios</span>
+
+                
+            </div>
+        </div>
+        <div class="col-md-2">
+            <h4 class="text-center"><strong>ESPACIO PUBLICITARIO</strong></h4>
+        </div>
+    </div>
+{% endblock %}

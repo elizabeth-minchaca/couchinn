@@ -1,0 +1,148 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}index.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}searcher.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/carousel.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/modal.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/tooltip.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/button.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //Cargar ciudad via Ajax
+            $("#ciudadLoading").hide();
+            $("#searchCouchProvincia").change(function () {
+                $.ajax({
+                    method: "POST",
+                    url: "{{ constant('ROOT_URL') }}couch.php?action=get_ciudades",
+                    dataType: "text", //Ojo con cambiar a json
+                    data: {"id_provincia": $("#searchCouchProvincia").val()},
+                    beforeSend: function () {
+                        $("#searchCouchCiudad").html("<option value=''>Cargando...</option>");
+                        $("#ciudadLoading").show();
+                    },
+                    complete: function (data) {
+                        setTimeout(function () {
+                            $("#searchCouchCiudad").html(data.responseText);
+                            $("#ciudadLoading").hide();
+                        }, 1000);
+                    }
+                });
+            });
+
+            //captura del submit
+            $("#showResult").hide();
+            $("#searchForm").submit(function (event) {
+                $("#indexCouchinns").html("");
+                $("#indexCouchLoading").show();
+                $("#indexPaginador").hide();
+                $("#searchCouchSubmit").button('loading');
+                $.ajax({
+                    type: "POST",
+                    url: "{{ constant('ROOT_URL') }}index.php?action=search_data",
+                    data: new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                })
+                        .done(function (data, textStatus, jqXHR) {
+                            $("#searchCouchSubmit").button('reset');
+                            // $('#searchForm').trigger("reset");
+                            $("#indexCouchLoading").hide();
+                            $("#showResult h3").html(data.msj);
+                            $("#showResult").show();
+
+                            if (!data.error) {
+                                setTimeout(function () {
+                                    $("#indexCouchinns").html(data.couchinns);
+                                    $("#indexPaginador nav ul:first").html(data.paginador);
+                                    $("#indexPaginador").show();
+                                }, 500);
+                            } else {
+                                $("#indexPaginador").hide();
+                            }
+                        });
+                event.preventDefault();
+            });
+        }); //END DOCUMENT
+
+        function goTo(pagina) {
+            $("#indexCouchinns").html("");
+            $("#indexCouchLoading").show();
+            $("#indexPaginador").hide();
+            $.post("{{ constant('ROOT_URL') }}index.php?action=paginator", {"pagina": pagina}, null, "json")
+                    .done(function (data, textStatus, jqXHR) {
+                        setTimeout(function () {
+                            $("#indexCouchLoading").hide();
+                            $("#indexCouchinns").html(data.couchinns);
+                            $("#indexPaginador nav ul:first").html(data.paginador);
+                            $("#indexPaginador").show();
+                        }, 500);
+                    });
+        }
+
+        function goToSearch(pagina) {
+            var tipo = $("#searchCouchTipo").val();
+            var prov = $("#searchCouchProvincia").val();
+            var cdad = $("#searchCouchCiudad").val();
+            var descr = $("#searchCouchDescripcion").val();
+            $("#indexCouchinns").html("");
+            $("#indexCouchLoading").show();
+            $("#indexPaginador").hide();
+            $.post("{{ constant('ROOT_URL') }}index.php?action=search_paginator", {"pagina": pagina, "idTipoCouch": tipo, "idProvincia": prov, "idCiudad": cdad, "descripcion": descr}, null, "json")
+                    .done(function (data, textStatus, jqXHR) {
+                        $("#searchCouchSubmit").button('reset');
+                        // $('#searchForm').trigger("reset");
+
+                        $("#indexCouchLoading").hide();
+                        $("#showResult h3").html(data.msj);
+                        if (!data.error) {
+                            setTimeout(function () {
+                                $("#indexCouchinns").html(data.couchinns);
+                                $("#indexPaginador nav ul:first").html(data.paginador);
+                                $("#indexPaginador").show();
+                            }, 500);
+                        } else {
+                            $("#indexPaginador").hide();
+                        }
+                    });
+        }
+
+    </script>
+{% endblock %}
+
+{% block container %}
+    {% include 'searcher.html.twig' %}
+    <div id="couchinnsContainer" class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-9">
+                <div id="showResult" class="alert alert-success" role="alert">
+                    <h3></h3>
+                </div>
+
+                <div id="indexCouchLoading" class="col-md-12 text-center">
+                    <img src="{{ constant('PATH_URL_IMG') }}loading6.gif" style="height: 170px;" alt="Cargando">
+                </div>
+                <div id="indexCouchinns">
+                    {% for couch in couchs %}
+                        {% include "couchtemplate.html.twig" with{'couch': couch} %}
+                    {% endfor %}
+                </div>
+                <div id="indexPaginador" class="col-md-12 text-center">
+                    <nav>
+                        <ul class="pagination pagination-lg">
+                            {% include "indexpaginador.html.twig" with{"pagActiva": pagActiva, "paginas": paginas} %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_1.html.twig" %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

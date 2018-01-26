@@ -1,0 +1,206 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}newCouch.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/button.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.min.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/modal.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/tooltip.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //Manejo de submit via ajax
+            $('#couchNewForm').submit(function (event) {
+                //cambiar estado del boton submit
+                $("#newCouchSubmit").button('loading');
+                $("#modalLoading").modal({
+                    "show": true,
+                    "keyboard": false,
+                    "backdrop": "static"
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ constant('ROOT_URL') }}couch.php?action=couch_submit",
+                    data: new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    dataType: 'json',
+                    processData: false
+                }).done(function (data) {
+                    //Se verifica si hubo error del lado del servidor
+                    if (data.error) {
+                        swal("Error!", "Tu Couch NO fue registrado en el sistema." + data.msj, "error");
+                    } else {
+                        $("#modalLoading").modal("hide");
+                        //Cambiar botton
+                        $("#newCouchSubmit").button('reset');
+                        //Reset form
+                        $('#couchNewForm').trigger("reset");
+                        $("#imagePreview").html('<h4 class="text-center">FOTO</h4>');
+                        $("#imagePreview").css("background-image", "none");
+                        swal({
+                            title: "Felicitaciones!",
+                            text: "Tu Couch fue registrado exitosamente!",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonText: "Cerrar",
+                            closeOnConfirm: false
+                        }, function (isConfirm) {
+                            if (isConfirm)
+                                $(location).attr('href', "{{ constant('ROOT_URL') }}couch.php?action=show&id="+data.id);
+                        });
+                    }
+                });
+                event.preventDefault();
+            });
+
+            //Cargar ciudad via Ajax
+
+            $("#newCouchProvincia").change(function () {
+                $.ajax({
+                    method: "POST",
+                    url: "{{ constant('ROOT_URL') }}couch.php?action=get_ciudades",
+                    dataType: "text",//Ojo con cambiar a json
+                    data: {"id_provincia": $("#newCouchProvincia").val()},
+                    beforeSend: function () {
+                        $("#newCouchCiudad").html("<option value=''>Cargando...</option>");
+                        $("#ciudadLoading").show();
+                    },
+                    complete: function (data) {
+                        setTimeout(function () {
+                            $("#newCouchCiudad").html(data.responseText);
+                            $("#ciudadLoading").hide();
+                        }, 1000);
+                    }
+                });
+            });
+
+            //Cargar Imagen
+            $("#imagePreview").on("click", function () {
+                $("#uploadFile").click();
+            });
+            $("#uploadFile").on("change", function () {
+                var files = !!this.files ? this.files : [];
+                if (!files.length || !window.FileReader)
+                    return; // no file selected, or no FileReader support
+                if (/^image/.test(files[0].type)) { // only image file
+                    var reader = new FileReader(); // instance of the FileReader
+                    reader.readAsDataURL(files[0]); // read the local file
+                    reader.onloadend = function () { // set image data as background of div
+                        $("#imagePreview").html("");
+                        $("#imagePreview").css("background-image", "url(" + this.result + ")");
+                    };
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+            <div id="newCouchContainer" class="col-md-9">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1><span class="glyphicon glyphicon-tags"></span> Couch <small>- Nuevo</small></h1>
+                        </div>
+                        <form id="couchNewForm" class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="form-group form-group-lg">
+                                        <label for="newCouchTipo" class="col-md-3 control-label ">Tipo</label>
+                                        <div class="col-md-9">
+                                            <select id="newCouchTipo" class="form-control" name="idTipoCouch" required="required">
+                                                <option value="">Seleccionar...</option>
+                                                {% for tipo in tipos %}
+                                                    <option value="{{ tipo.idTipoCouch }}">{{ tipo.nombre |title }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-lg">
+                                        <label for="newCouchCapacidad" class="col-md-3 control-label">Capacidad</label>
+                                        <div class="col-md-9">
+                                            <input id="newCouchCapacidad" type="number" name="capacidad" class="form-control" required placeholder="Capacidad">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-lg">
+                                        <label for="newCouchLugar" class="col-md-3 control-label">Lugar</label>
+                                        <div class="col-md-9">
+                                            <select id="newCouchProvincia" name="idProvincia" class="form-control" required="required">
+                                                <option value="">Provincia</option>
+                                                {% for provincia in provincias %}
+                                                    <option value="{{ provincia.id }}">{{ provincia.nombre | title }}</option>
+                                                {% endfor %} 
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-lg">
+                                        <label for="newCouchLugar" class="col-md-3 control-label">
+                                            <img id="ciudadLoading" src="{{ constant('PATH_URL_IMG') }}loading7.gif" style="height: 25px; background: none" alt="Logo de Couchinn">
+                                        </label>
+                                        <div class="col-md-9">
+                                            <select id="newCouchCiudad" class="form-control" name="idCiudad" required="required">
+                                                <option value="">----</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div id="imagePreview" class="col-md-12" data-toggle="tooltip" data-placement="left" title="Agregar Foto...">
+                                        <h4 class="text-center">FOTO</h4>
+                                    </div>
+                                    <input id="uploadFile" type="file" name="foto" required="required" class="img hidden" />
+                                </div>
+
+                            </div> 
+
+                            <div class="row">
+                                <div class="form-group form-group-lg">
+                                    <label for="newCouchTitulo" class="col-md-2 control-label">T&iacute;tulo</label>
+                                    <div class="col-md-10">
+                                        <input id="newCouchTitulo" name="titulo" type="text" class="form-control" required="required" placeholder="Título">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-group-lg">
+                                    <label for="newCouchDescripcion" class="col-md-2 control-label">Descripci&oacute;n</label>
+                                    <div class="col-md-10">
+                                        <textarea id="newCouchDescripcion" name="descripcion" class="form-control" rows="7" required="required" placeholder="Descripción"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button id="newCouchSubmit" type="submit" data-loading-text="Enviando..."  class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-floppy-save"></span> CREAR</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12  containerPublicidad">
+                {% include  "publicidad_3.html.twig" %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

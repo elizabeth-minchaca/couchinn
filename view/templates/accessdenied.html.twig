@@ -1,0 +1,22 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}index.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/carousel.js"></script>
+{% endblock %}
+
+{% block container %}
+
+    <div id="couchinnsContainer" class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-danger" role="alert">
+                <h1 class="text-center">
+                    <strong>ACCESO DENEGADO!!</strong>
+                </h1>
+            </div>
+        </div>
+    </div>
+{% endblock %}

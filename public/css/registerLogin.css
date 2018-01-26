@@ -1,0 +1,85 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 17/05/2016, 21:00:14
+    Author     : kibunke
+*/
+body{
+    background: rgba(0, 0, 0, 0) linear-gradient(to right, white, whitesmoke) repeat scroll 0 0;
+}
+#registerContainer{
+    height: 737px;   
+    background: linear-gradient( to bottom, #1C85C7, #eee);
+}
+#registerContainer > div, #header > div  {
+    padding: 0px;
+}
+#header button, #registerContainer button{
+    color: white;
+}
+#header button{
+    margin-top: 25px;
+}
+#header form label{
+    font-weight: normal;
+}
+#registerFooter{
+    background: rgba(0, 0, 0, 0) linear-gradient(to right, white, whitesmoke) repeat scroll 0 0;
+    height: 160px;
+    padding-top: 15px;
+}
+#header{
+    background: rgba(0, 0, 0, 0) linear-gradient(to left, white, whitesmoke) repeat scroll 0 0;
+}
+#header h2{
+    color: #1c85c7;
+}
+#registerContainer > div:first-child {
+    padding-top: 25px;
+}
+#registerContainer > div:first-child h2 {
+    color: white;
+    font-weight: bold;
+}
+#registerContainer > div:first-child button {
+    background-color: yellowgreen;
+    border-color: yellowgreen;
+    color: black;
+    margin-top: 20px;
+}
+#registerContainer form div.row{
+    margin-right: 0px;
+    margin-left: 0px;
+}
+#registerContainer form div.row > div:last-child{
+    padding-right: 0px;
+    padding-left: 10px;
+}
+#registerContainer form div.row > div:first-child{
+    padding-right: 10px;
+    padding-left: 0px;
+}
+#registerContainer > div:last-child div > h1{
+    color: whitesmoke;
+    margin-bottom: 20px;
+}
+#registerContainer > div:first-child .panel{
+    background-color: rgba(2, 2, 2, 0.7);
+    border-radius: 25px;
+    margin-top: 60px;
+    border: 5px outset white;
+}
+.registerSmall{
+    padding: 0px;
+    margin: 0px;
+    font-size: 12px;
+}
+#header form > div {
+    margin-bottom: 7px;
+}
+#header form > div > label{
+    color: black;
+}

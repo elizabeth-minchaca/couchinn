@@ -1,0 +1,292 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}showCouch.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}searcher.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}bootstrap-daterangepicker-master/daterangepicker.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}bootstrap-daterangepicker-master/moment.min.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/button.js" ></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.min.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}bootstrap-daterangepicker-master/daterangepicker.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/carousel.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/modal.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#reservaFecha').daterangepicker({
+                "autoApply": false,
+                "todayHighlight": true,
+                "locale": {
+                    "format": "DD/MM/YYYY",
+                    "separator": " - ",
+                    "applyLabel": "Aceptar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "From",
+                    "toLabel": "To",
+                    "customRangeLabel": "Custom",
+                    "weekLabel": "W",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "April",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                },
+                "alwaysShowCalendars": true,
+            
+            }, function (start, end, label) {
+                //console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+            });
+
+
+
+            $("#showCouchReservar").on("click", function () {
+                $("#ReservaModal").modal({
+                    "show": true,
+                    "keyboard": false,
+                    "backdrop": "static",
+                });
+            });
+            //Realizar reserva
+            $("#reservaForm").submit(function (event) {
+                $("#reservaFormSubmit").button('loading');
+                $.ajax({
+                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url: "{{ constant('ROOT_URL') }}reserva.php?action=sent_reserva", // the url where we want to POST
+                    data: new FormData(this), // our data object
+                    contentType: false,
+                    dataType: 'json',
+                    processData: false
+                }).done(function (data) {
+                    //Se verifica si hubo error del lado del servidor
+                    if (data.error) {
+                        swal("Error!", data.msj, "error");
+                    } else {
+                        $("#ReservaModal").modal("hide");
+                        swal({
+                            title: "Listo!",
+                            text: "Tu reserva fue realizada exitosamente.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonText: "Cerrar",
+                            closeOnConfirm: true
+                        }, function (isConfirm) {
+                            $(location).attr('href', '{{ constant('ROOT_URL') }}reserva.php?action=list_realizadas');
+                        });
+                        $("#reservaFormSubmit").button('reset');
+                        $('#reservaForm').trigger("reset"); //borra el formulario
+                    }
+                });
+                event.preventDefault();
+            });
+
+            $("#imagePreview").on("click", function () {
+                $('#couchFullscreen').click();
+            });
+            $("#showCouchForm").submit(function (event) {
+                $("#showCouchFormSubmit").button('loading');
+                $.ajax({
+                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url: "{{ constant('ROOT_URL') }}comentario.php?action=sent_query", // the url where we want to POST
+                    data: new FormData(this), // our data object
+                    contentType: false,
+                    dataType: 'json',
+                    processData: false
+                }).done(function (data) {
+                    //Se verifica si hubo error del lado del servidor
+                    if (data.error) {
+                        swal("Error!", data.msj, "error");
+                    } else {
+                        swal({
+                            title: "Listo!",
+                            text: "Tu consulta fue enviada exitosamente.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonText: "Cerrar",
+                            closeOnConfirm: true
+                        }, function (isConfirm) {
+                            $("#consultasConteiner").load("{{ constant('ROOT_URL') }}comentario.php?action=get_queries&id={{couch.idCouch}}");
+                        });
+                        $("#showCouchFormSubmit").button('reset');
+                        $('#showCouchForm').trigger("reset"); //borra el formulario
+                    }
+                });
+                event.preventDefault();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block container %}
+    {% include 'searcher.html.twig' %}
+    <div id="couchinnsContainer" class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-9">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1><span class="glyphicon glyphicon-tags"> </span>  Couch <small>- detalle</small></h1>
+                        </div>
+                        <form id="showCouchForm" class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="form-group form-group-lg">
+                                        <label for="newCouchTipo" class="col-md-3 control-label ">Título</label>
+                                        <div class="col-md-9">
+                                            <p class="form-control-static">{{ couch.titulo | capitalize}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-lg">
+                                        <label for="newCouchTipo" class="col-md-3 control-label ">Tipo</label>
+                                        <div class="col-md-9">
+                                            <p class="form-control-static">{{ couch.tipo | capitalize}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-lg">
+                                        <label for="newCouchCapacidad" class="col-md-3 control-label">Capacidad</label>
+                                        <div class="col-md-9">
+                                            <p class="form-control-static">{{ couch.capacidad }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-lg">
+                                        <label for="newCouchLugar" class="col-md-3 control-label">Lugar</label>
+                                        <div class="col-md-9">
+                                            <p class="form-control-static">{{ couch.ciudad | capitalize}} - {{ couch.provincia | title}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div id="imagePreview" class="col-md-12" data-toggle="tooltip" data-placement="left" title="Agregar Foto...">
+                                        <img  src="data:image/png;base64,{{couch.foto}}" />
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group form-group-lg">
+                                        <label for="newCouchDescripcion" class="col-md-2 control-label">Descripci&oacute;n</label>
+                                        <div class="col-md-10">
+                                            <p id="showCouchDescripcion" class="form-control-static">{{ couch.descripcion | capitalize }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            {% if couch.idUsuario != session.id %}
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button id="showCouchReservar"  class="btn btn-primary btn-lg" type="button">Reserva Ya!</button>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="row">
+                                <div class="page-header">
+                                    <h3 class="text-center"><strong>Consultas</strong></h3>
+                                </div>
+                            </div>
+                            <div  class="col-md-12">
+                                {% if couch.idUsuario != session.id %}
+                                    <div class="input-group">
+                                        <input type="text" class="form-control input input-lg" name="comentario" required="required" placeholder="Escriba una consulta...">
+                                        <input type="hidden" value="{{couch.idCouch}}" name="idCouch">
+                                        <span class="input-group-btn">
+                                            <button id="showCouchFormSubmit" data-loading-text="Enviando..."  class="btn btn-primary btn-lg" type="submit">Enviar</button>
+                                        </span>
+                                    </div><!-- /input-group -->
+                                {% endif %}
+                            </div>
+                            <div id="consultasConteiner" class="col-md-12">
+                                {% include 'comentarios.html.twig' %}
+                            </div>
+                        </form>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <button id="couchFullscreen" type="button" class="btn btn-primary hidden" data-toggle="modal" data-target=".bs-example-modal-lg">Fullscreen</button>
+            <div id="couchShowPreviewModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <img  src="data:image/png;base64,{{couch.foto}}" style="height: 900px; width: 900px;"/>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div id="ReservaModal" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="reservaForm" class="form-horizontal">
+                            <input type="hidden" value="{{couch.idCouch}}" name="idCouch">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Contestar</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group form-group-lg">
+                                    <label for="huespedes" class="col-sm-3 control-label">Huéspedes</label>
+                                    <div class="col-sm-6">
+                                        <input id="reservaHuespedes" type="number" name="huespedes"  class="form-control" required="required" placeholder="Cantidad">
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-lg">
+                                    <label for="passActual" class="col-sm-3 control-label">Fecha</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <input id="reservaFecha" type="text" name="fechas"  class="form-control text-center" required="required" placeholder="Fecha">
+                                            <span class="input-group-addon" id="basic-addon1">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div><!-- /input-group -->
+                                    </div>
+
+                                </div>
+                                <div class="form-group form-group-lg">
+                                    <label for="passActual" class="col-sm-3 control-label">Comentario</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="respuestaModal" name="comentario" class="form-control" rows="7" required="required" placeholder="Ingresar la respuesta..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button id="reservaFormSubmit" type="submit"  data-loading-text="Reservando..." class="btn btn-primary">Reservar</button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,245 @@
+{% extends "layout.html.twig" %}
+
+{% block otherStylesheet  %}
+    <link rel="stylesheet" href="{{ constant('PATH_URL_CSS') }}tipocouch.css" type="text/css" />
+    <link rel="stylesheet" href="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.css" type="text/css" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/button.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}sweetalert-master/dist/sweetalert.min.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/modal.js"></script>
+    <script src="{{ constant('PATH_URL_VENDOR') }}twbs/bootstrap/js/tooltip.js"></script>
+    <script type="text/javascript">
+
+        function deleteTipo(idTipo) {
+            swal({
+                title: "¿Eliminar tipo?",
+                text: "Esta por eliminar el tipo de couch seleccionado del sistema!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Si, eliminar!",
+                cancelButtonText: "No, cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                // la URL para la petición
+                                url: "{{ constant('ROOT_URL') }}tipocouch.php?action=delete",
+                                // la información a enviar
+                                // (también es posible utilizar una cadena de datos)
+                                data: {"idTipo": idTipo},
+                                // especifica si será una petición POST o GET
+                                type: 'POST',
+                                // el tipo de información que se espera de respuesta
+                                dataType: 'json',
+                                // código a ejecutar si la petición es satisfactoria;
+                                // la respuesta es pasada como argumento a la función
+                                success: function (json) {
+                                    if (json.error) {
+                                        swal("Error!", json.msj, "error");
+                                    } else {
+                                        swal({
+                                            title: "Terminado!",
+                                            text: "El elemento fue eliminado correctamente!",
+                                            type: "success",
+                                            showCancelButton: false,
+                                            confirmButtonText: "Cerrar",
+                                            closeOnConfirm: false
+                                        }, function (isConfirm) {
+                                            if (isConfirm)
+                                                $(location).attr('href', "{{ constant('ROOT_URL') }}tipocouch.php");
+                                        });
+                                    }
+                                },
+                                // código a ejecutar si la petición falla;
+                                // son pasados como argumentos a la función
+                                // el objeto de la petición en crudo y código de estatus de la petición
+                                error: function (xhr, status) {
+                                    alert('Disculpe, existió un problema');
+                                },
+                                // código a ejecutar sin importar si la petición falló o no
+                                complete: function (xhr, status) {
+                                    //alert('Petición realizada');
+                                }
+                            });
+
+                        }
+                    });
+
+        }
+        function edit(idTipo, value) {
+            swal({
+                title: "Nuevo Tipo de Couch",
+                text: "Por favor ingrese un nuevo tipo",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                animation: "slide-from-top",
+                inputValue: value
+            }, function (inputValue) {
+                if (inputValue === false)
+                    return false;
+                if (inputValue === "") {
+                    swal.showInputError("No puede dejar estar en blanco");
+                    return false;
+                }
+                $.ajax({
+                    // la URL para la petición
+                    url: "{{ constant('ROOT_URL') }}tipocouch.php?action=edit",
+                    // la información a enviar
+                    // (también es posible utilizar una cadena de datos)
+                    data: {"nuevoTipo": inputValue, "idTipo": idTipo},
+                    // especifica si será una petición POST o GET
+                    type: 'POST',
+                    // el tipo de información que se espera de respuesta
+                    dataType: 'json',
+                    // código a ejecutar si la petición es satisfactoria;
+                    // la respuesta es pasada como argumento a la función
+                    success: function (json) {
+                        if (json.error) {
+                            swal("Error!", "El tipo ingresado ya se encuentra registrado en el sistema.", "error");
+                        } else {
+                            swal({
+                                title: "Felicitaciones!",
+                                text: "Su nuevo tipo fue registrado exitosamente!",
+                                type: "success",
+                                showCancelButton: false,
+                                confirmButtonText: "Cerrar",
+                                closeOnConfirm: false
+                            }, function (isConfirm) {
+                                if (isConfirm)
+                                    $(location).attr('href', "{{ constant('ROOT_URL') }}tipocouch.php");
+                            });
+                        }
+                    },
+                    // código a ejecutar si la petición falla;
+                    // son pasados como argumentos a la función
+                    // el objeto de la petición en crudo y código de estatus de la petición
+                    error: function (xhr, status) {
+                        alert('Disculpe, existió un problema');
+                    },
+                    // código a ejecutar sin importar si la petición falló o no
+                    complete: function (xhr, status) {
+                        //alert('Petición realizada');
+                    }
+                });
+            });
+        }
+
+        function newTipo() {
+            swal({
+                title: "Nuevo Tipo de Couch",
+                text: "Por favor ingrese un nuevo tipo",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                animation: "slide-from-top",
+                inputPlaceholder: "Ingrese un tipo"
+            }, function (inputValue) {
+                if (inputValue === false)
+                    return false;
+                if (inputValue === "") {
+                    swal.showInputError("No puede dejar estar en blanco");
+                    return false;
+                }
+
+                $.ajax({
+                    // la URL para la petición
+                    url: "{{ constant('ROOT_URL') }}tipocouch.php?action=new",
+                    // la información a enviar
+                    // (también es posible utilizar una cadena de datos)
+                    data: {"nuevoTipo": inputValue},
+                    // especifica si será una petición POST o GET
+                    type: 'POST',
+                    // el tipo de información que se espera de respuesta
+                    dataType: 'json',
+                    // código a ejecutar si la petición es satisfactoria;
+                    // la respuesta es pasada como argumento a la función
+                    success: function (json) {
+                        if (json.error) {
+                            swal("Error!", "El tipo ingresado ya se encuentra registrado en el sistema.", "error");
+                        } else {
+                            swal({
+                                title: "Felicitaciones!",
+                                text: "Su nuevo tipo fue registrado exitosamente!",
+                                type: "success",
+                                showCancelButton: false,
+                                confirmButtonText: "Cerrar",
+                                closeOnConfirm: false
+                            }, function (isConfirm) {
+                                if (isConfirm)
+                                    $(location).attr('href', "{{ constant('ROOT_URL') }}tipocouch.php");
+                            });
+                        }
+                    },
+                    // código a ejecutar si la petición falla;
+                    // son pasados como argumentos a la función
+                    // el objeto de la petición en crudo y código de estatus de la petición
+                    error: function (xhr, status) {
+                        alert('Disculpe, existió un problema');
+                    },
+                    // código a ejecutar sin importar si la petición falló o no
+                    complete: function (xhr, status) {
+                        //alert('Petición realizada');
+                    }
+                });
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-3 containerPublicidad">
+                {% include  "publicidad_4.html.twig" %}
+            </div>
+            <div id="tipoCouchContainer" class="col-md-9">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <h1><span class="glyphicon glyphicon-tags"></span>  Tipo Couch <small>- listado</small></h1>
+                            <div class="text-right">
+                                <a class="btn btn-primary btn-xs " onclick="newTipo();" href="#" role="button"><span class="glyphicon glyphicon-tags"></span>- NUEVO</a>
+                            </div>
+                        </div>
+                        <table class="table table-condensed table-striped table-bordered">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Nombre</th>
+                                <th class="text-center">Acción</th>
+                            </tr>
+                            {% for tipo in tipos %}
+                                <tr>
+                                    <td class="text-center">{{loop.index}}</td>
+                                    <td>{{tipo.nombre}}</td>
+                                    <td class="text-center tipoCouchAccion">
+                                        <a href="#"  onclick="edit({{tipo.idTipoCouch}}, '{{tipo.nombre}}');">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                        </a>
+                                        <a href="#">
+                                            <span onclick="deleteTipo({{tipo.idTipoCouch}});" class="glyphicon glyphicon-trash"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12  containerPublicidad">
+                {% include  "publicidad_3.html.twig" %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

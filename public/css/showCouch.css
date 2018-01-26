@@ -1,0 +1,70 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 28/05/2016, 19:51:16
+    Author     : kibunke
+*/
+
+#imagePreview img{
+    height: 300px;
+    width: 300px;
+}
+#couchinnsContainer div.panel{
+    border-radius: 20px;
+    border: 0px;
+}
+#imagePreview:hover{
+    cursor: pointer;
+}
+#couchShowPreviewModal .modal-content{
+    box-shadow: none;
+    background: none;
+    border: none;
+}
+#couchinnsContainer{
+    margin-top: 25px !important;
+}
+#consultasConteiner{
+    max-height: 920px;
+    overflow-y: auto;
+    margin-top: 20px;
+}
+#consultasConteiner blockquote{
+    margin-bottom: 0px;
+}
+
+.panelComentario div.panel-body{
+    padding: 0px;
+}
+.panelComentario div.panel-body > div:last-child{
+    margin-bottom: 0px;
+}
+.panelComentario .alert-warning, .panelComentario .alert-success{
+    border-radius: 20px;
+    padding: 0px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+.panelComentario .alert-warning blockquote, .panelComentario .alert-success blockquote{
+    border-color: rgb(154,205,50);
+}
+.panelComentario .alert-warning blockquote{
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+.panelComentario .alert-success blockquote{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+#showCouchDescripcion {
+    padding-left:  0px;
+}
+#showCouchReservar{
+   background-color: red;
+   border-color: black;
+   font-weight: bolder;
+   color: white;
+}

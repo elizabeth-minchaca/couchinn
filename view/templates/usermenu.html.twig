@@ -1,0 +1,57 @@
+<div class="row">
+    <div id="usermenu" class="col-md-8 col-md-offset-2">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{{ constant('ROOT_URL') }}index.php"><span class="glyphicon glyphicon-home"></span> INICIO</a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="{{ constant('ROOT_URL') }}usuario.php?action=show&id={{session.id}}"><span class="glyphicon glyphicon-user"></span> MI PERFIL</a>
+                        </li>
+                        {% if session.tipo == 'ADMINISTRADOR' %}
+                            <li>
+                                <a href="{{ constant('ROOT_URL') }}tipocouch.php"><span class="glyphicon glyphicon-tags"></span> TIPO COUCH</a>
+                            </li>
+                        {% endif %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-tag"></span>  MI COUCH <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ constant('ROOT_URL') }}couch.php?action=new"><span class="glyphicon glyphicon-plus"></span> NUEVO</a></li>
+                                <li><a href="{{ constant('ROOT_URL') }}couch.php?action=listado_couchs"><span class="glyphicon glyphicon-th-list"></span> MIS COUCH'S</a></li> 
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-envelope"></span>  CONSULTAS <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ constant('ROOT_URL') }}comentario.php?action=list_answers"><span class="glyphicon glyphicon-envelope"></span> POR RESPONDER</a></li>
+                                <li><a href="{{ constant('ROOT_URL') }}comentario.php?action=list_questions"><span class="glyphicon glyphicon-envelope"></span> REALIZADAS</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-duplicate"></span>  RESERVAS <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ constant('ROOT_URL') }}reserva.php?action=list_realizadas"><span class="glyphicon glyphicon-paste"></span> REALIZADAS</a></li>
+                                <li><a href="{{ constant('ROOT_URL') }}reserva.php?action=list_recibidas"><span class="glyphicon glyphicon-copy"></span> RECIBIDAS</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-star"></span>  CALIFICACION <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ constant('ROOT_URL') }}calificacion.php?action=list_calificaciones"><span class="glyphicon glyphicon-star"></span> MIS CALIFICACIONES</a></li>
+                                <li><a href="{{ constant('ROOT_URL') }}calificacion.php?action=list_calificar"><span class="glyphicon glyphicon-star-empty"></span> CALIFICAR HUÉSPED</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{{ constant('ROOT_URL') }}register_login.php?action=logout"><span class="glyphicon glyphicon-log-out"></span> SALIR</a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+    </div>
+</div>
+

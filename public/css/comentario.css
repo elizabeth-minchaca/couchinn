@@ -1,0 +1,26 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 24/06/2016, 21:46:19
+    Author     : kibunke
+*/
+
+#comentarioContainer  div.panel{
+    border-radius: 20px;
+    border: 0px;
+}
+div.panel-warning div.panel-footer, div.panel-warning div.panel-heading{
+    background-color: #fe99a6 !important;
+}
+div.panel-success div.panel-footer, div.panel-success div.panel-heading{
+    background-color: #bde4fe  !important;
+}
+#comentarioContainer td.pendiente{
+    background-color: #fe99a6;
+}
+#comentarioContainer td.respondida{
+    background-color: #bde4fe;
+}
